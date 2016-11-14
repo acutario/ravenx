@@ -41,7 +41,7 @@ defmodule Ravenx.Mixfile do
   defp package do
     [# These are the default files included in the package
      name: :ravenx,
-     files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+     files: ["lib", "mix.exs", "README*", "LICENSE*"],
      maintainers: ["Óscar de Arriba"],
      licenses: ["MIT"],
      links: %{"GitHub" => "https://github.com/acutario/ravenx"}]
