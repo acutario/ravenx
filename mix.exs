@@ -3,10 +3,12 @@ defmodule Ravenx.Mixfile do
 
   def project do
     [app: :ravenx,
-     version: "0.1.0",
+     version: "0.0.1-alpha",
      elixir: "~> 1.3",
      build_embedded: Mix.env == :prod,
      start_permanent: Mix.env == :prod,
+     description: description(),
+     package: package(),
      deps: deps()]
   end
 
@@ -28,5 +30,20 @@ defmodule Ravenx.Mixfile do
   # Type "mix help deps" for more examples and options
   defp deps do
     []
+  end
+
+  defp description do
+    """
+    Notification dispatch library for Elixir applications (WIP).
+    """
+  end
+
+  defp package do
+    [# These are the default files included in the package
+     name: :ravenx,
+     files: ["lib", "priv", "mix.exs", "README*", "readme*", "LICENSE*", "license*"],
+     maintainers: ["Óscar de Arriba"],
+     licenses: ["MIT"],
+     links: %{"GitHub" => "https://github.com/acutario/ravenx"}]
   end
 end
