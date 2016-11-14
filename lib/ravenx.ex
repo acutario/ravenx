@@ -1,6 +1,6 @@
 defmodule Ravenx do
 
-  def dispatch(strategy, [title: _t, short_body: _sb, body: _b] = payload, options=[]) do
+  def dispatch(strategy, [title: _t, short_body: _sb, body: _b] = payload, options \\ []) do
     handler = available_strategies
     |> Keyword.get(strategy)
 
@@ -12,7 +12,7 @@ defmodule Ravenx do
     end
   end
 
-  def dispatch_async(strategy, [title: _t, short_body: _sb, body: _b] = payload, options=[]) do
+  def dispatch_async(strategy, [title: _t, short_body: _sb, body: _b] = payload, options \\ []) do
     handler = available_strategies
     |> Keyword.get(strategy)
 
@@ -26,7 +26,7 @@ defmodule Ravenx do
 
   def available_strategies() do
     [
-      # slack: Ravenx.Strategy.Slack
+      slack: Ravenx.Strategy.Slack
     ]
   end
 end
