@@ -1,8 +1,6 @@
 defmodule Ravenx.Strategy.Slack do
-  def call([title: title, short_body: short_body, body: _body], opts \\ []) do
-    # TODO: Merge opts with app config
-
-    payload = %{ text: "*#{title}*\n#{short_body}" }
+  def call([title: title, body: body], opts \\ []) do
+    payload = %{ text: "*#{title}*\n#{body}" }
     |> parse_opts(opts)
 
     url = opts
