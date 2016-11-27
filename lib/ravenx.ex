@@ -1,6 +1,7 @@
 defmodule Ravenx do
   @moduledoc """
-  Ravenx main module. 
+  Ravenx main module.
+  
   It includes and manages dispatching of messages through registered strategies.
   """
 
