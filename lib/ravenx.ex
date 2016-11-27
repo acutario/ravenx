@@ -4,8 +4,7 @@ defmodule Ravenx do
     handler = available_strategies
     |> Keyword.get(strategy)
 
-    opts = options
-    |> merge_options(strategy)
+    opts = get_options(strategy, payload, options)
 
     unless (is_nil(handler)) do
       Task.async(fn -> handler.call(payload, opts) end)
@@ -19,8 +18,7 @@ defmodule Ravenx do
     handler = available_strategies
     |> Keyword.get(strategy)
 
-    opts = options
-    |> merge_options(strategy)
+    opts = get_options(strategy, payload, options)
 
     unless (is_nil(handler)) do
       pid = Task.async(fn -> handler.call(payload, opts) end)
@@ -36,8 +34,21 @@ defmodule Ravenx do
     ]
   end
 
-  def merge_options(opts, strategy) do
-    Application.get_env(:ravenx, strategy, [])
-    |> Keyword.merge(opts)
+
+  defp get_options(strategy, payload, options) do
+    app_config_opts = Application.get_env(:ravenx, strategy, [])
+
+    config_module_opts = Application.get_env(:ravenx, :config, nil)
+    |> call_config_module(strategy, payload)
+
+    app_config_opts
+    |> Keyword.merge(config_module_opts)
+    |> Keyword.merge(options)
   end
+
+  defp call_config_module(module, _strategy, _payload) when is_nil(module), do: []
+  defp call_config_module(module, strategy, payload) do
+    apply(module, strategy, [payload])
+  end
+
 end
