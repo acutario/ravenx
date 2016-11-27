@@ -8,8 +8,8 @@ defmodule Ravenx.Strategy.Slack do
   @doc """
   Function used to send a notification to Slack.
 
-  The function receives a `Keyword` list including a `title` and a `body`, and an
-  `opts` `Keyword` list that can include this configuration:
+  The function receives a Keyword list including a `title` and a `body`, and an
+  `opts` Keyword list that can include this configuration:
 
   * `url`: URL of Slack integration to call.
   * `username`: Username of the bot used to send the notification.
