@@ -21,6 +21,7 @@ defmodule Ravenx do
       {:error, "wadus strategy not defined"}
 
   """
+  @spec dispatch(atom, keyword, keyword) :: {atom, type}
   def dispatch(strategy, [title: _t, body: _b] = payload, options \\ []) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -55,6 +56,7 @@ defmodule Ravenx do
       {:error, "wadus strategy not defined"}
 
   """
+  @spec dispatch_async(atom, keyword, keyword) :: {atom, type}
   def dispatch_async(strategy, [title: _t, body: _b] = payload, options \\ []) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -72,6 +74,7 @@ defmodule Ravenx do
   @doc """
   Function to get a Keyword list of registered strategies.
   """
+  @spec available_strategies() :: keyword
   def available_strategies() do
     [
       slack: Ravenx.Strategy.Slack
