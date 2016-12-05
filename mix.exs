@@ -2,14 +2,17 @@ defmodule Ravenx.Mixfile do
   use Mix.Project
 
   def project do
-    [app: :ravenx,
-     version: "0.0.1-alpha",
-     elixir: "~> 1.3",
-     build_embedded: Mix.env == :prod,
-     start_permanent: Mix.env == :prod,
-     description: description(),
-     package: package(),
-     deps: deps()]
+    [
+      app: :ravenx,
+      version: "0.0.1-alpha",
+      elixir: "~> 1.3",
+      build_embedded: Mix.env == :prod,
+      start_permanent: Mix.env == :prod,
+      description: description(),
+      package: package(),
+      deps: deps(),
+      dialyzer: [plt_add_deps: :transitive]
+    ]
   end
 
   # Configuration for the OTP application
@@ -32,7 +35,8 @@ defmodule Ravenx.Mixfile do
     [
       {:poison, "~> 3.0"},
       {:httpotion, "~> 3.0"},
-      {:ex_doc, ">= 0.0.0", only: :dev}
+      {:ex_doc, ">= 0.0.0", only: :dev},
+      {:dialyxir, "~> 0.4", only: :dev}
     ]
   end
 
@@ -48,6 +52,7 @@ defmodule Ravenx.Mixfile do
      files: ["lib", "mix.exs", "README*", "LICENSE*"],
      maintainers: ["Óscar de Arriba"],
      licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/acutario/ravenx"}]
+     links: %{"GitHub" => "https://github.com/acutario/ravenx"}
+    ]
   end
 end

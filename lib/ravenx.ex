@@ -21,7 +21,7 @@ defmodule Ravenx do
       {:error, "wadus strategy not defined"}
 
   """
-  @spec dispatch(atom, keyword, keyword) :: {atom, type}
+  @spec dispatch(atom, keyword, keyword) :: {atom, any}
   def dispatch(strategy, [title: _t, body: _b] = payload, options \\ []) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -56,7 +56,7 @@ defmodule Ravenx do
       {:error, "wadus strategy not defined"}
 
   """
-  @spec dispatch_async(atom, keyword, keyword) :: {atom, type}
+  @spec dispatch_async(atom, keyword, keyword) :: {atom, any}
   def dispatch_async(strategy, [title: _t, body: _b] = payload, options \\ []) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -102,7 +102,7 @@ defmodule Ravenx do
   #
   defp call_config_module(module, _strategy, _payload) when is_nil(module), do: []
   defp call_config_module(module, strategy, payload) do
-    if (Keyword.has_key?(strategy, module.__info__(:functions))) do
+    if (Keyword.has_key?(module.__info__(:functions), strategy)) do
       apply(module, strategy, [payload])
     else
       []
