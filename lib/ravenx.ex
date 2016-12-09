@@ -1,7 +1,7 @@
 defmodule Ravenx do
   @moduledoc """
   Ravenx main module.
-  
+
   It includes and manages dispatching of messages through registered strategies.
   """
 
@@ -51,7 +51,7 @@ defmodule Ravenx do
 
       iex> Task.await(task)
       {:ok, "ok"}
-      
+
       iex> Ravenx.dispatch_async(:wadus, [title: "Hello world!", body: "Science is cool"])
       {:error, "wadus strategy not defined"}
 
@@ -77,7 +77,8 @@ defmodule Ravenx do
   @spec available_strategies() :: keyword
   def available_strategies() do
     [
-      slack: Ravenx.Strategy.Slack
+      slack: Ravenx.Strategy.Slack,
+      email: Ravenx.Strategy.Email
     ]
   end
 
