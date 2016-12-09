@@ -27,16 +27,30 @@ defmodule Ravenx.Strategy.Email do
   an `:error`.
 
   """
-  def call([from: _f, to: _t]=payload, opts \\ []) do
+  @spec call(keyword, keyword) :: {atom, any}
+  def call([from: _f, to: _t]=payload, [adapter:_a] = opts) do
     email = %Bamboo.Email{}
     |> parse_payload(payload)
 
     send_email(email, opts)
   end
 
+  # It returns a list of available adapters.
+  #
+  @spec available_adapters() :: keyword
+  def available_adapters() do
+    [
+      mailgun: Bamboo.MailgunAdapter,
+      mandrill: Bamboo.MandrillAdapter,
+      sendgrid: Bamboo.SendgridAdapter,
+      local: Bamboo.LocalAdapter,
+      tesst: Bamboo.TestAdapter
+    ]
+  end
+
   # Priate function to handle email sending and verify that required fields are
   # passed
-  defp send_email(%Bamboo.Email{from: _f, to: _t} = email, %{adapter: adapter} = opts) do
+  defp send_email(%Bamboo.Email{from: _f, to: _t} = email, [adapter: adapter] = opts) do
     adapter = available_adapters()
     |> Keyword.get(adapter, nil)
 
@@ -76,17 +90,5 @@ defmodule Ravenx.Strategy.Email do
   defp add_to_email(email, key, value) do
     email
     |> Map.put(key, value)
-  end
-
-  # It returns a list of available adapters.
-  #
-  def available_adapters() do
-    [
-      mailgun: Bamboo.MailgunAdapter,
-      mandrill: Bamboo.MandrillAdapter,
-      sendgrid: Bamboo.SendgridAdapter,
-      local: Bamboo.LocalAdapter,
-      tesst: Bamboo.TestAdapter
-    ]
   end
 end
