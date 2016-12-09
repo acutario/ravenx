@@ -28,7 +28,7 @@ defmodule Ravenx.Strategy.Email do
 
   """
   @spec call(keyword, keyword) :: {atom, any}
-  def call([from: _f, to: _t]=payload, opts // []) do
+  def call([from: _f, to: _t]=payload, opts \\ []) do
     email = %Bamboo.Email{}
     |> parse_payload(payload)
 
@@ -44,7 +44,7 @@ defmodule Ravenx.Strategy.Email do
       mandrill: Bamboo.MandrillAdapter,
       sendgrid: Bamboo.SendgridAdapter,
       local: Bamboo.LocalAdapter,
-      tesst: Bamboo.TestAdapter
+      test: Bamboo.TestAdapter
     ]
   end
 
@@ -55,7 +55,7 @@ defmodule Ravenx.Strategy.Email do
     |> Keyword.get(adapter, nil)
 
     unless (is_nil(adapter)) do
-      try
+      try do
         response = Bamboo.Mailer.deliver_now(adapter, email, opts)
         # If everything went well, just answer with OK
         {:ok, response}
