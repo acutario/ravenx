@@ -28,7 +28,7 @@ defmodule Ravenx.Strategy.Email do
 
   """
   @spec call(keyword, keyword) :: {atom, any}
-  def call([from: _f, to: _t]=payload, [adapter:_a] = opts) do
+  def call([from: _f, to: _t]=payload, opts // []) do
     email = %Bamboo.Email{}
     |> parse_payload(payload)
 
@@ -64,7 +64,7 @@ defmodule Ravenx.Strategy.Email do
         e -> {:error, e}
       end
     else
-      {:error, "Adapter not found: '#{adapter}'"
+      {:error, "Adapter not found: '#{adapter}'"}
     end
   end
   defp send_email(_email, %{adapter: _adapter}), do: {:error, "Missing 'from' or 'to' addresses"}

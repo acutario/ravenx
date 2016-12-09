@@ -20,6 +20,7 @@ defmodule Ravenx.Strategy.Slack do
   an `:error`.
 
   """
+  @spec call(keyword) :: {atom, any}
   def call([title: title, body: body], opts \\ []) do
     payload = %{ text: "*#{title}*\n#{body}" }
     |> parse_opts(opts)
