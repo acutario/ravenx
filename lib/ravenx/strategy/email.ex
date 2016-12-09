@@ -8,13 +8,26 @@ defmodule Ravenx.Strategy.Email do
   @doc """
   Function used to send a notification via email.
 
-  TODO: Add extra doc about config
+  It receives two Keyword lists, a payload and options.
+
+  The payload can include this attributes:
+
+  * `from`: (required) the email address from which the email is sent.
+  * `to`: (required) a list of email addresses that will receive the email.
+  * `cc`: a list of email addresses that will receive a copy of the email.
+  * `bcc`: a list of email addresses that will receive a hidden copy of the email.
+  * `subject`: the subject of the e-mail.
+  * `text_body`: the text-version of the message.
+  * `html_body`: that HTML version of the message.
+
+  In the options Keyword list there must be an `adapter` key indicating one of
+  the available adapters, and also the configuration required for each adapter.
 
   It will respond with a tuple, indicating if everything is `:ok` or there was
   an `:error`.
 
   """
-  def call([subject: _s, text_body: _tb, from: _f, to: _t]=payload, opts \\ []) do
+  def call([from: _f, to: _t]=payload, opts \\ []) do
     email = %Bamboo.Email{}
     |> parse_payload(payload)
 
@@ -65,7 +78,9 @@ defmodule Ravenx.Strategy.Email do
     |> Map.put(key, value)
   end
 
-  defp available_adapters() do
+  # It returns a list of available adapters.
+  #
+  def available_adapters() do
     [
       mailgun: Bamboo.MailgunAdapter,
       mandrill: Bamboo.MandrillAdapter,
