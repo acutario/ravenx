@@ -59,7 +59,7 @@ defmodule Ravenx.Strategy.Email do
         response = Bamboo.Mailer.deliver_now(adapter, email, opts)
         # If everything went well, just answer with OK
         {:ok, response}
-      catch
+      rescue
         # If there is an exception, return it as an error
         e -> {:error, e}
       end

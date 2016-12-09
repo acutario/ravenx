@@ -23,9 +23,9 @@ defmodule Ravenx.Strategy.Slack do
   @spec call(map, map) :: {atom, any}
   def call(%{title: title, body: body}, options \\ %{}) do
     payload = %{ text: "*#{title}*\n#{body}" }
-    |> parse_opts(opts)
+    |> parse_options(options)
 
-    url = opts
+    url = options
     |> Map.get(:url)
 
     send_notification(payload, url)
@@ -34,11 +34,11 @@ defmodule Ravenx.Strategy.Slack do
   # Private function to get options from Keyword received and apply it to the
   # payload.
   #
-  defp parse_opts(payload, opts) do
+  defp parse_options(payload, options) do
     payload
-    |> add_to_payload(:username, Map.get(opts, :username))
-    |> add_to_payload(:icon_emoji, Map.get(opts, :icon))
-    |> add_to_payload(:channel, Map.get(opts, :channel))
+    |> add_to_payload(:username, Map.get(options, :username))
+    |> add_to_payload(:icon_emoji, Map.get(options, :icon))
+    |> add_to_payload(:channel, Map.get(options, :channel))
   end
 
   # Private function to send the notification using HTTPotion client.
