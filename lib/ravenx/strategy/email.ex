@@ -21,6 +21,14 @@ defmodule Ravenx.Strategy.Email do
     send_email(email, opts)
   end
 
+  # Priate function to handle email sending and verify that required fields are
+  # passed
+  defp send_email(%Bamboo.Email{from: _f, to: _t} = email, %{adapter: adapter} = opts) do
+
+  end
+  defp send_email(_email, %{adapter: _adapter}), do: {:error, "Missing 'from' or 'to' addresses"}
+  defp send_email(_email, _opts), do: {:error, "Missing adapter configuration"}
+
   # Private function to get information from payload and apply to the Bamboo
   # email object.
   #
@@ -43,11 +51,13 @@ defmodule Ravenx.Strategy.Email do
     |> Map.put(key, value)
   end
 
-  # Priate function to handle email sending and verify that required fields are
-  # passed
-  defp send_email(%Bamboo.Email{from: _f, to: _t} = email, %{adapter: adapter} = opts) do
-    # TODO: do the job.
+  defp available_adapters() do
+    [
+      mailgun: Bamboo.MailgunAdapter,
+      mandrill: Bamboo.MandrillAdapter,
+      sendgrid: Bamboo.SendgridAdapter,
+      local: Bamboo.LocalAdapter,
+      tesst: Bamboo.TestAdapter
+    ]
   end
-  defp send_email(_email, %{adapter: _adapter}), do: {:error, "Missing 'from' or 'to' addresses"}
-  defp send_email(_email, _opts), do: {:error, "Missing adapter configuration"}
 end

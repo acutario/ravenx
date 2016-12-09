@@ -19,7 +19,16 @@ defmodule Ravenx.Mixfile do
   #
   # Type "mix help compile.app" for more information
   def application do
-    [applications: [:logger]]
+    [
+      applications: [
+        :logger
+      ],
+      included_applications: [
+        :httpotion,
+        :poison,
+        :bamboo
+      ]
+    ]
   end
 
   # Dependencies can be Hex packages:
