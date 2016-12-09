@@ -18,10 +18,7 @@ defmodule Ravenx.Strategy.Email do
     email = %Bamboo.Email{}
     |> parse_payload(payload)
 
-    url = opts
-    |> Keyword.get(:url)
-
-    send_notification(payload, url)
+    send_email(email, opts)
   end
 
   # Private function to get information from payload and apply to the Bamboo
