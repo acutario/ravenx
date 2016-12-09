@@ -24,7 +24,21 @@ defmodule Ravenx.Strategy.Email do
   # Priate function to handle email sending and verify that required fields are
   # passed
   defp send_email(%Bamboo.Email{from: _f, to: _t} = email, %{adapter: adapter} = opts) do
+    adapter = available_adapters()
+    |> Keyword.get(adapter, nil)
 
+    unless (is_nil(adapter)) do
+      try
+        response = Bamboo.Mailer.deliver_now(adapter, email, opts)
+        # If everything went well, just answer with OK
+        {:ok, response}
+      catch
+        # If there is an exception, return it as an error
+        e -> {:error, e}
+      end
+    else
+      {:error, "Adapter not found: '#{adapter}'"
+    end
   end
   defp send_email(_email, %{adapter: _adapter}), do: {:error, "Missing 'from' or 'to' addresses"}
   defp send_email(_email, _opts), do: {:error, "Missing adapter configuration"}
