@@ -35,6 +35,7 @@ defmodule Ravenx.Mixfile do
     [
       {:poison, "~> 3.0"},
       {:httpotion, "~> 3.0"},
+      {:bamboo, "~> 0.7.0"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:dialyxir, "~> 0.4", only: :dev}
     ]
