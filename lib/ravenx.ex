@@ -14,15 +14,15 @@ defmodule Ravenx do
 
   ## Examples
 
-      iex> Ravenx.dispatch(:slack, [title: "Hello world!", body: "Science is cool"])
+      iex> Ravenx.dispatch(:slack, %{title: "Hello world!", body: "Science is cool"})
       {:ok, "ok"}
 
-      iex> Ravenx.dispatch(:wadus, [title: "Hello world!", body: "Science is cool"])
+      iex> Ravenx.dispatch(:wadus, %{title: "Hello world!", body: "Science is cool"})
       {:error, "wadus strategy not defined"}
 
   """
-  @spec dispatch(atom, keyword, keyword) :: {atom, any}
-  def dispatch(strategy, [title: _t, body: _b] = payload, options \\ []) do
+  @spec dispatch(atom, map, map) :: {atom, any}
+  def dispatch(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
 
@@ -46,18 +46,18 @@ defmodule Ravenx do
 
   ## Examples
 
-      iex> {status, task} = Ravenx.dispatch_async(:slack, [title: "Hello world!", body: "Science is cool"])
+      iex> {status, task} = Ravenx.dispatch_async(:slack, %{title: "Hello world!", body: "Science is cool"})
       {:ok, %Task{owner: #PID<0.165.0>, pid: #PID<0.183.0>, ref: #Reference<0.0.4.418>}}
 
       iex> Task.await(task)
       {:ok, "ok"}
 
-      iex> Ravenx.dispatch_async(:wadus, [title: "Hello world!", body: "Science is cool"])
+      iex> Ravenx.dispatch_async(:wadus, %{title: "Hello world!", body: "Science is cool"})
       {:error, "wadus strategy not defined"}
 
   """
-  @spec dispatch_async(atom, keyword, keyword) :: {atom, any}
-  def dispatch_async(strategy, [title: _t, body: _b] = payload, options \\ []) do
+  @spec dispatch_async(atom, map, map) :: {atom, any}
+  def dispatch_async(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
 
@@ -87,7 +87,7 @@ defmodule Ravenx do
   #
   defp get_options(strategy, payload, options) do
     # Get strategy configuration in application
-    app_config_opts = Application.get_env(:ravenx, strategy, [])
+    app_config_opts = Application.get_env(:ravenx, strategy, %{})
 
     # Get config module and call the function of this strategy (if any)
     config_module_opts = Application.get_env(:ravenx, :config, nil)
@@ -95,18 +95,18 @@ defmodule Ravenx do
 
     # Merge options
     app_config_opts
-    |> Keyword.merge(config_module_opts)
-    |> Keyword.merge(options)
+    |> Map.merge(config_module_opts)
+    |> Map.merge(options)
   end
 
   # Private function to call the config module if it's defined.
   #
-  defp call_config_module(module, _strategy, _payload) when is_nil(module), do: []
+  defp call_config_module(module, _strategy, _payload) when is_nil(module), do: %{}
   defp call_config_module(module, strategy, payload) do
     if (Keyword.has_key?(module.__info__(:functions), strategy)) do
       apply(module, strategy, [payload])
     else
-      []
+      %{}
     end
   end
 

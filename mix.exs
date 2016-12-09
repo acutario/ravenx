@@ -21,7 +21,10 @@ defmodule Ravenx.Mixfile do
   def application do
     [
       applications: [
-        :logger
+        :logger,
+        :bamboo,
+        :httpoison,
+        :hackney
       ],
       included_applications: [
         :httpotion,
