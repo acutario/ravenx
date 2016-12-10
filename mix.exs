@@ -23,7 +23,7 @@ defmodule Ravenx.Mixfile do
       applications: [
         :logger,
         :bamboo,
-        :httpoison,
+        :bamboo_smtp,
         :hackney
       ],
       included_applications: [
@@ -48,6 +48,7 @@ defmodule Ravenx.Mixfile do
       {:poison, "~> 3.0"},
       {:httpotion, "~> 3.0"},
       {:bamboo, "~> 0.7.0"},
+      {:bamboo_smtp, "~> 1.2.1"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:dialyxir, "~> 0.4", only: :dev}
     ]

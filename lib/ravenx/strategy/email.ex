@@ -43,6 +43,7 @@ defmodule Ravenx.Strategy.Email do
       mailgun: Bamboo.MailgunAdapter,
       mandrill: Bamboo.MandrillAdapter,
       sendgrid: Bamboo.SendgridAdapter,
+      smtp: Bamboo.SMTPAdapter,
       local: Bamboo.LocalAdapter,
       test: Bamboo.TestAdapter
     ]
