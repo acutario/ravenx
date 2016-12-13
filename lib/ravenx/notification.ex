@@ -3,16 +3,42 @@ defmodule Ravenx.Notification do
   Base module for notifications implemented using Ravenx strategies.
   """
 
+  @doc """
+  Macro to inject notification features in application's modules.
+  """
   defmacro __using__(_) do
     quote do
+      # Notification implementations should implement required callbacks.
       @behaviour Ravenx.NotificationBehaviour
 
+      @doc """
+      Function dispatch the notification synchronously.
+
+      The object received will be used as the `get_notifications_list` argument,
+      which should return a list of notification config lists.
+
+      It will respond with a list of tuples (one for each element returned
+      by `get_notifications_list`), indicating for each notification if everything
+      was `:ok` or there was an `:error`.
+
+      """
       def dispatch(opts) do
         opts
         |> get_notifications_list
         |> Enum.map(&Ravenx.Notification.dispatch_notification/1)
       end
 
+      @doc """
+      Function dispatch the notification asynchronously.
+
+      The object received will be used as the `get_notifications_list` argument,
+      which should return a list of notification config lists.
+
+      It will respond with a list of tuples (one for each element returned
+      by `get_notifications_list`), indicating for each notification if everything
+      was `:ok` or there was an `:error`.
+
+      """
       def dispatch_async(opts) do
         opts
         |> get_notifications_list
@@ -31,7 +57,7 @@ defmodule Ravenx.Notification do
   2. Payload map: including the payload data of the notification.
   3. Options map _(optional)_: the special configuration of the notification
 
-  It will respond with a tuple, indicating if everything is `:ok` or there was
+  It will respond with a tuple, indicating if everything was `:ok` or there was
   an `:error`.
 
   """

@@ -16,7 +16,7 @@ defmodule Ravenx.Strategy.Slack do
   * `icon`: Icon to show as the bot avatar (with Slack format, like `:bird:`)
   * `channel`: Channel or username to send the notification.
 
-  It will respond with a tuple, indicating if everything is `:ok` or there was
+  It will respond with a tuple, indicating if everything was `:ok` or there was
   an `:error`.
 
   """
