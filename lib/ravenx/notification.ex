@@ -21,6 +21,20 @@ defmodule Ravenx.Notification do
     end
   end
 
+  @doc """
+  Function used to send a notification synchronously using a list with the
+  configuration of the notification.
+
+  The list should have this objects:
+
+  1. Strategy atom: defining which strategy to use
+  2. Payload map: including the payload data of the notification.
+  3. Options map _(optional)_: the special configuration of the notification
+
+  It will respond with a tuple, indicating if everything is `:ok` or there was
+  an `:error`.
+
+  """
   def dispatch_notification(notification) do
     case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
@@ -34,6 +48,20 @@ defmodule Ravenx.Notification do
     end
   end
 
+  @doc """
+  Function used to send a notification asynchronously using a list with the
+  configuration of the notification.
+
+  The list should have this objects:
+
+  1. Strategy atom: defining which strategy to use
+  2. Payload map: including the payload data of the notification.
+  3. Options map _(optional)_: the special configuration of the notification
+
+  It will respond with a tuple, indicating if everything is `:ok` or there was
+  an `:error`.
+
+  """
   def dispatch_async_notification(notification) do
     case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
