@@ -21,7 +21,7 @@ defmodule Ravenx.Notification do
     end
   end
 
-  def dispatch_notification(notification) when is_list(notification) and length(notification) >=2 do
+  def dispatch_notification(notification) do
     case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch(strategy, payload, options)
@@ -34,7 +34,7 @@ defmodule Ravenx.Notification do
     end
   end
 
-  def dispatch_async_notification(notification) when is_list(notification) and length(notification) >=2 do
+  def dispatch_async_notification(notification) do
     case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch_async(strategy, payload, options)
