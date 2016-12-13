@@ -22,6 +22,7 @@ defmodule Ravenx.Notification do
       was `:ok` or there was an `:error`.
 
       """
+      @spec dispatch(any) :: [{atom, any}]
       def dispatch(opts) do
         opts
         |> get_notifications_list
@@ -39,6 +40,7 @@ defmodule Ravenx.Notification do
       was `:ok` or there was an `:error`.
 
       """
+      @spec dispatch_async(any) :: [{atom, any}]
       def dispatch_async(opts) do
         opts
         |> get_notifications_list
@@ -61,6 +63,7 @@ defmodule Ravenx.Notification do
   an `:error`.
 
   """
+  @spec dispatch_notification(list) :: {atom, any}
   def dispatch_notification(notification) do
     case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
@@ -88,6 +91,7 @@ defmodule Ravenx.Notification do
   an `:error`.
 
   """
+  @spec dispatch_async_notification(list) :: {atom, any}
   def dispatch_async_notification(notification) do
     case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
