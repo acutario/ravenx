@@ -31,8 +31,7 @@ defmodule Ravenx.Strategy.Email do
   def call(payload, opts \\ %{}) do
     email = %Bamboo.Email{}
     |> parse_payload(payload)
-
-    send_email(email, opts)
+    |> send_email(opts)
   end
 
   # It returns a list of available adapters.
