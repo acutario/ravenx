@@ -48,6 +48,9 @@ defmodule Ravenx.Strategy.Email do
     ]
   end
 
+  # Tries to get an adapter form list of available adapters
+  #
+  @spec available_adapter(atom) :: {atom, any}
   defp available_adapter(adapter) do
     case Keyword.get(available_adapters(), adapter, nil) do
       nil ->
