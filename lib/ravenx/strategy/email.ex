@@ -29,7 +29,7 @@ defmodule Ravenx.Strategy.Email do
   """
   @spec call(map, map) :: {atom, any}
   def call(payload, opts \\ %{}) do
-    email = %Bamboo.Email{}
+    %Bamboo.Email{}
     |> parse_payload(payload)
     |> send_email(opts)
   end
