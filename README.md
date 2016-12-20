@@ -11,25 +11,25 @@ iex> Ravenx.dispatch(strategy, payload)
 ```
 
 In which `stratey` is an atom indicating one of the defined strategies and the
-`payload` is a Keyword list with information to dispatch the notification.
+`payload` is a map with information to dispatch the notification.
 
 For example:
 
 ```elixir
-iex> Ravenx.dispatch(:slack, [title: "Hello world!", body: "Science is cool!"])
+iex> Ravenx.dispatch(:slack, %{title: "Hello world!", body: "Science is cool!"})
 ```
 
-Optionally, a third parameter containing a Keyword list of options (like URLs or
+Optionally, a third parameter containing a map of options (like URLs or
 secrets) can be passed.
 
 ## Configuration
-Strategies usually needs configuration options. To solve that, there are three 
+Strategies usually needs configuration options. To solve that, there are three
 ways in which you can configure a notification dispatch strategy:
 
 1. Passing the options in the dispatch call:
 
 ```elixir
-iex> Ravenx.dispatch(:slack, [title: "Hello world!", body: "Science is cool!"], [url: "...", icon: ":bird:"])
+iex> Ravenx.dispatch(:slack, %{title: "Hello world!", body: "Science is cool!"}, %{url: "...", icon: ":bird:"})
 ```
 
 2. Specifying a configuration module in your application config:
@@ -44,25 +44,25 @@ and creating that module:
 ```elixir
 defmodule YourApp.RavenxConfig do
   def slack (_payload) do
-    [
+    %{
       url: "...",
       icon: ":bird:"
-    ]
+    }
   end
 end
 ```
 
-**Note:** the module should contain a function called as the strategy yopu are 
+**Note:** the module should contain a function called as the strategy yopu are
 configuring, receiving the payload and returning a configuration Keyword list.
 
 3. Specifying the configuration directly on your application config file:
 
 ```elixir
 config :ravenx,
-  slack: [
+  slack: %{
     url: "...",
     icon: ":bird:"
-  ]
+  }
 ```
 
 ### Mixing configurations

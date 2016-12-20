@@ -8,8 +8,8 @@ defmodule Ravenx.Strategy.Slack do
   @doc """
   Function used to send a notification to Slack.
 
-  The function receives a Keyword list including a `title` and a `body`, and an
-  `opts` Keyword list that can include this configuration:
+  The function receives a map including a `title` and a `body`, and an
+  `options` Mmp that can include this configuration:
 
   * `url`: URL of Slack integration to call.
   * `username`: Username of the bot used to send the notification.
@@ -20,12 +20,13 @@ defmodule Ravenx.Strategy.Slack do
   an `:error`.
 
   """
-  def call([title: title, body: body], opts \\ []) do
+  @spec call(map, map) :: {atom, any}
+  def call(%{title: title, body: body}, options \\ %{}) do
     payload = %{ text: "*#{title}*\n#{body}" }
-    |> parse_opts(opts)
+    |> parse_options(options)
 
-    url = opts
-    |> Keyword.get(:url)
+    url = options
+    |> Map.get(:url)
 
     send_notification(payload, url)
   end
@@ -33,11 +34,11 @@ defmodule Ravenx.Strategy.Slack do
   # Private function to get options from Keyword received and apply it to the
   # payload.
   #
-  defp parse_opts(payload, opts) do
+  defp parse_options(payload, options) do
     payload
-    |> add_to_payload(:username, Keyword.get(opts, :username))
-    |> add_to_payload(:icon_emoji, Keyword.get(opts, :icon))
-    |> add_to_payload(:channel, Keyword.get(opts, :channel))
+    |> add_to_payload(:username, Map.get(options, :username))
+    |> add_to_payload(:icon_emoji, Map.get(options, :icon))
+    |> add_to_payload(:channel, Map.get(options, :channel))
   end
 
   # Private function to send the notification using HTTPotion client.
