@@ -11,6 +11,7 @@ defmodule Ravenx.Mixfile do
       description: description(),
       package: package(),
       deps: deps(),
+      docs: docs(),
       dialyzer: [plt_add_deps: :transitive]
     ]
   end
@@ -51,6 +52,13 @@ defmodule Ravenx.Mixfile do
       {:bamboo_smtp, "~> 1.2.1"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:dialyxir, "~> 0.4", only: :dev}
+    ]
+  end
+
+  defp docs do
+    [
+      source_url: "https://github.com/acutario/ravenx",
+      extras: ["README.md"]
     ]
   end
 
