@@ -4,7 +4,7 @@ defmodule Ravenx.Mixfile do
   def project do
     [
       app: :ravenx,
-      version: "0.1.0",
+      version: "0.1.1",
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
@@ -64,7 +64,7 @@ defmodule Ravenx.Mixfile do
 
   defp description do
     """
-    Notification dispatch library for Elixir applications (WIP).
+    Notification dispatch library for Elixir applications.
     """
   end
 
