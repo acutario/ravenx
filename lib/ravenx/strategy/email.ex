@@ -66,7 +66,11 @@ defmodule Ravenx.Strategy.Email do
     case available_adapter(adapter) do
       {:ok, adapter} ->
         try do
-          response = Bamboo.Mailer.deliver_now(adapter, email, opts)
+          # We must tell the adapter to fulfill the options
+          complete_opts = opts
+          |> adapter.handle_config()
+
+          response = Bamboo.Mailer.deliver_now(adapter, email, complete_opts)
           # If everything went well, just answer with OK
           {:ok, response}
         rescue
