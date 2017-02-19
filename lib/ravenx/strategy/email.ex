@@ -31,6 +31,7 @@ defmodule Ravenx.Strategy.Email do
   def call(payload, opts \\ %{}) do
     %Bamboo.Email{}
     |> parse_payload(payload)
+    |> parse_options(options)
     |> send_email(opts)
   end
 
@@ -96,6 +97,18 @@ defmodule Ravenx.Strategy.Email do
     |> add_to_email(:bcc, Map.get(payload, :bcc))
     |> add_to_email(:text_body, Map.get(payload, :text_body))
     |> add_to_email(:html_body, Map.get(payload, :html_body))
+  end
+
+  # Private function to get information from options and apply to the Bamboo
+  # email object.
+  #
+  defp parse_options(email, options) do
+    email
+    |> add_to_email(:subject, Map.get(options, :subject))
+    |> add_to_email(:from, Map.get(options, :from))
+    |> add_to_email(:to, Map.get(options, :to))
+    |> add_to_email(:cc, Map.get(options, :cc))
+    |> add_to_email(:bcc, Map.get(options, :bcc))
   end
 
   # Private function to add information to the email object.
