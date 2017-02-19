@@ -87,7 +87,8 @@ defmodule Ravenx do
   #
   defp get_options(strategy, payload, options) do
     # Get strategy configuration in application
-    app_config_opts = Application.get_env(:ravenx, strategy, %{})
+    app_config_opts = Application.get_env(:ravenx, strategy, [])
+    |> Enum.into(%{})
 
     # Get config module and call the function of this strategy (if any)
     config_module_opts = Application.get_env(:ravenx, :config, nil)
