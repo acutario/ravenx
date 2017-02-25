@@ -73,9 +73,9 @@ defmodule Ravenx.Notification do
       {strategy, payload} when is_atom(strategy) and is_map(payload) ->
         Ravenx.dispatch(strategy, payload)
       [_] ->
-        {:error, "Notification config must include, at least, an strategy atom and a payload map."}
+        {:error, {:missing, :payload}}
       _ ->
-        {:error, "Notification config not valid"}
+        {:error, {:invalid, :notification}}
     end
   end
 
@@ -100,10 +100,10 @@ defmodule Ravenx.Notification do
         Ravenx.dispatch_async(strategy, payload, options)
       {strategy, payload} when is_atom(strategy) and is_map(payload) ->
         Ravenx.dispatch_async(strategy, payload)
-      {_} ->
-        {:error, "Notification config must include, at least, an strategy atom and a payload map."}
+      [_] ->
+        {:error, {:missing, :payload}}
       _ ->
-        {:error, "Notification config not valid"}
+        {:error, {:invalid, :notification}}
     end
   end
 end
