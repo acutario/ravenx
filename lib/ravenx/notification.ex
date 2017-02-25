@@ -22,7 +22,7 @@ defmodule Ravenx.Notification do
       was `:ok` or there was an `:error`.
 
       """
-      @spec dispatch(any) :: [atom: {atom, tuple}]
+      @spec dispatch(any) :: [atom: {:ok | :error, any}]
       def dispatch(opts) do
         opts
         |> get_notifications_config
@@ -40,7 +40,7 @@ defmodule Ravenx.Notification do
       was `:ok` or there was an `:error`.
 
       """
-      @spec dispatch_async(any) :: [atom: {atom, tuple}]
+      @spec dispatch_async(any) :: [atom: {:ok | :error, any}]
       def dispatch_async(opts) do
         opts
         |> get_notifications_config
@@ -63,12 +63,12 @@ defmodule Ravenx.Notification do
   an `:error`.
 
   """
-  @spec dispatch_notification(atom, list) :: {atom, any}
+  @spec dispatch_notification({atom, map, map} | {atom, map}) :: {:ok | :error, any}
   def dispatch_notification(notification) do
     case notification do
-      [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
+      {strategy, payload, options} when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch(strategy, payload, options)
-      [strategy, payload] when is_atom(strategy) and is_map(payload) ->
+      {strategy, payload} when is_atom(strategy) and is_map(payload) ->
         Ravenx.dispatch(strategy, payload)
       [_] ->
         {:error, "Notification config must include, at least, an strategy atom and a payload map."}
@@ -91,14 +91,14 @@ defmodule Ravenx.Notification do
   an `:error`.
 
   """
-  @spec dispatch_async_notification(atom, list) :: {atom, any}
+  @spec dispatch_async_notification({atom, map, map} | {atom, map}) :: {:ok | :error, any}
   def dispatch_async_notification(notification) do
     case notification do
-      [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
+      {strategy, payload, options} when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch_async(strategy, payload, options)
-      [strategy, payload] when is_atom(strategy) and is_map(payload) ->
+      {strategy, payload} when is_atom(strategy) and is_map(payload) ->
         Ravenx.dispatch_async(strategy, payload)
-      [_] ->
+      {_} ->
         {:error, "Notification config must include, at least, an strategy atom and a payload map."}
       _ ->
         {:error, "Notification config not valid"}

@@ -3,5 +3,5 @@ defmodule Ravenx.NotificationBehaviour do
   Provides an interface for implementations of Ravenx notifications.
   """
 
-  @callback get_notifications_config(any) :: [atom: [atom, map, map]]
+  @callback get_notifications_config(any) :: [atom: {atom, map} | {atom, map, map}]
 end
