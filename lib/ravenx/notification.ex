@@ -14,37 +14,37 @@ defmodule Ravenx.Notification do
       @doc """
       Function dispatch the notification synchronously.
 
-      The object received will be used as the `get_notifications_list` argument,
+      The object received will be used as the `get_notifications_config` argument,
       which should return a list of notification config lists.
 
       It will respond with a list of tuples (one for each element returned
-      by `get_notifications_list`), indicating for each notification if everything
+      by `get_notifications_config`), indicating for each notification if everything
       was `:ok` or there was an `:error`.
 
       """
       @spec dispatch(any) :: [{atom, any}]
       def dispatch(opts) do
         opts
-        |> get_notifications_list
-        |> Enum.map(&Ravenx.Notification.dispatch_notification/1)
+        |> get_notifications_config
+        |> Enum.map(&Ravenx.Notification.dispatch_notification/2)
       end
 
       @doc """
       Function dispatch the notification asynchronously.
 
-      The object received will be used as the `get_notifications_list` argument,
+      The object received will be used as the `get_notifications_config` argument,
       which should return a list of notification config lists.
 
       It will respond with a list of tuples (one for each element returned
-      by `get_notifications_list`), indicating for each notification if everything
+      by `get_notifications_config`), indicating for each notification if everything
       was `:ok` or there was an `:error`.
 
       """
       @spec dispatch_async(any) :: [{atom, any}]
       def dispatch_async(opts) do
         opts
-        |> get_notifications_list
-        |> Enum.map(&Ravenx.Notification.dispatch_async_notification/1)
+        |> get_notifications_config
+        |> Enum.map(&Ravenx.Notification.dispatch_async_notification/2)
       end
     end
   end
@@ -63,9 +63,9 @@ defmodule Ravenx.Notification do
   an `:error`.
 
   """
-  @spec dispatch_notification(list) :: {atom, any}
-  def dispatch_notification(notification) do
-    case notification do
+  @spec dispatch_notification(atom, list) :: {atom, any}
+  def dispatch_notification(key, notification) do
+    result = case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch(strategy, payload, options)
       [strategy, payload] when is_atom(strategy) and is_map(payload) ->
@@ -75,6 +75,8 @@ defmodule Ravenx.Notification do
       _ ->
         {:error, "Notification config not valid"}
     end
+
+    {key, result}
   end
 
   @doc """
@@ -91,9 +93,9 @@ defmodule Ravenx.Notification do
   an `:error`.
 
   """
-  @spec dispatch_async_notification(list) :: {atom, any}
-  def dispatch_async_notification(notification) do
-    case notification do
+  @spec dispatch_async_notification(atom, list) :: {atom, any}
+  def dispatch_async_notification(key, notification) do
+    result = case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch_async(strategy, payload, options)
       [strategy, payload] when is_atom(strategy) and is_map(payload) ->
@@ -103,5 +105,7 @@ defmodule Ravenx.Notification do
       _ ->
         {:error, "Notification config not valid"}
     end
+
+    {key, result}
   end
 end
