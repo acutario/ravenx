@@ -5,6 +5,8 @@ defmodule Ravenx.Strategy.Email do
   Used to dispatch notifications via email.
   """
 
+  alias Bamboo.Mailer
+
   @doc """
   Function used to send a notification via email.
 
@@ -73,7 +75,7 @@ defmodule Ravenx.Strategy.Email do
           complete_opts = opts
           |> adapter.handle_config()
 
-          response = Bamboo.Mailer.deliver_now(adapter, email, complete_opts)
+          response = Mailer.deliver_now(adapter, email, complete_opts)
           {:ok, response}
         rescue
           e -> {:error, {:exception, e}}
