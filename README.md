@@ -76,7 +76,7 @@ iex> YourApp.Notification.NotifyUser.dispatch(user)
   slack: {:ok, ...},
   email_user: {:ok, ...},
   email_company: {:ok, ...},
-  other_notification: {:error, "invalid_strategy specified not defined"}
+  other_notification: {:error, {:unknown_strategy, :invalid_strategy}}
 ]
 ```
 

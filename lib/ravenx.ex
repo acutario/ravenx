@@ -18,7 +18,7 @@ defmodule Ravenx do
       {:ok, "ok"}
 
       iex> Ravenx.dispatch(:wadus, %{title: "Hello world!", body: "Science is cool"})
-      {:error, "wadus strategy not defined"}
+      {:error, {:unknown_strategy, :wadus}}
 
   """
   @spec dispatch(atom, map, map) :: {:ok, any} | {:error, {atom, any}}
@@ -53,7 +53,7 @@ defmodule Ravenx do
       {:ok, "ok"}
 
       iex> Ravenx.dispatch_async(:wadus, %{title: "Hello world!", body: "Science is cool"})
-      {:error, "wadus strategy not defined"}
+      {:error, {:unknown_strategy, :wadus}}
 
   """
   @spec dispatch_async(atom, map, map) :: {:ok, any} | {:error, {atom, any}}
