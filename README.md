@@ -86,42 +86,40 @@ ways in which you can configure a notification dispatch strategy:
 
 1. Passing the options in the dispatch call:
 
-```elixir
-iex> Ravenx.dispatch(:slack, %{title: "Hello world!", body: "Science is cool!"}, %{url: "...", icon: ":bird:"})
-```
+  ```elixir
+  iex> Ravenx.dispatch(:slack, %{title: "Hello world!", body: "Science is cool!"}, %{url: "...", icon: ":bird:"})
+  ```
 
 2. Specifying a configuration module in your application config:
 
-```elixir
-config :ravenx,
-  config: YourApp.RavenxConfig
-```
+  ```elixir
+  config :ravenx,
+    config: YourApp.RavenxConfig
+  ```
 
-and creating that module:
+  and creating that module:
 
-```elixir
-defmodule YourApp.RavenxConfig do
-  def slack (_payload) do
-    %{
-      url: "...",
-      icon: ":bird:"
-    }
+  ```elixir
+  defmodule YourApp.RavenxConfig do
+    def slack (_payload) do
+      %{
+        url: "...",
+        icon: ":bird:"
+      }
+    end
   end
-end
-```
+  ```
 
-**Note:** the module should contain a function called as the strategy yopu are
-configuring, receiving the payload and returning a configuration Keyword list.
+  **Note:** the module should contain a function called as the strategy yopu are
+  configuring, receiving the payload and returning a configuration Keyword list.
 
 3. Specifying the configuration directly on your application config file:
 
-```elixir
-config :ravenx,
-  slack: %{
+  ```elixir
+  config :ravenx, :slack,
     url: "...",
     icon: ":bird:"
-  }
-```
+  ```
 
 ### Mixing configurations
 Configuration can also be mixed by using the three methods:
