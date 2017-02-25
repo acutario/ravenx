@@ -21,7 +21,7 @@ defmodule Ravenx do
       {:error, "wadus strategy not defined"}
 
   """
-  @spec dispatch(atom, map, map) :: {atom, any}
+  @spec dispatch(atom, map, map) :: {:ok, any} | {:error, {atom, any}}
   def dispatch(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -32,7 +32,7 @@ defmodule Ravenx do
       Task.async(fn -> handler.call(payload, opts) end)
       |> Task.await()
     else
-      {:error, "#{strategy} strategy not defined"}
+      {:error, {:unknown_strategy, strategy}}
     end
   end
 
@@ -56,7 +56,7 @@ defmodule Ravenx do
       {:error, "wadus strategy not defined"}
 
   """
-  @spec dispatch_async(atom, map, map) :: {atom, any}
+  @spec dispatch_async(atom, map, map) :: {:ok, any} | {:error, {atom, any}}
   def dispatch_async(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -67,7 +67,7 @@ defmodule Ravenx do
       task = Task.async(fn -> handler.call(payload, opts) end)
       {:ok, task}
     else
-      {:error, "#{strategy} specified not defined"}
+      {:error, {:unknown_strategy, strategy}}}
     end
   end
 
