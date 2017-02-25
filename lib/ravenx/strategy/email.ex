@@ -39,7 +39,7 @@ defmodule Ravenx.Strategy.Email do
   # It returns a list of available adapters.
   #
   @spec available_adapters() :: keyword
-  def available_adapters() do
+  def available_adapters do
     [
       mailgun: Bamboo.MailgunAdapter,
       mandrill: Bamboo.MandrillAdapter,
@@ -65,7 +65,7 @@ defmodule Ravenx.Strategy.Email do
   # Priate function to handle email sending and verify that required fields are
   # passed
   @spec send_email(Bamboo.Email.t, map) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
-  defp send_email(%Bamboo.Email{from: f, to: t} = email, %{ adapter: adapter } = opts) when is_bitstring(f) and is_bitstring(t) and is_atom(adapter) do
+  defp send_email(%Bamboo.Email{from: f, to: t} = email, %{adapter: adapter} = opts) when is_bitstring(f) and is_bitstring(t) and is_atom(adapter) do
     case available_adapter(adapter) do
       {:ok, adapter} ->
         try do
@@ -83,8 +83,8 @@ defmodule Ravenx.Strategy.Email do
     end
   end
   # If required data is missing, return errors
-  defp send_email(%Bamboo.Email{to: nil}, %{ adapter: _adapter }), do: {:error, {:missing_config, :to}}
-  defp send_email(%Bamboo.Email{from: nil}, %{ adapter: _adapter }), do: {:error, {:missing_config, :from}}
+  defp send_email(%Bamboo.Email{to: nil}, %{adapter: _adapter}), do: {:error, {:missing_config, :to}}
+  defp send_email(%Bamboo.Email{from: nil}, %{adapter: _adapter}), do: {:error, {:missing_config, :from}}
   defp send_email(_email, _opts), do: {:error, {:missing_config, :adapter}}
 
   # Private function to get information from payload and apply to the Bamboo

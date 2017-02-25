@@ -28,11 +28,11 @@ defmodule Ravenx do
 
     opts = get_options(strategy, payload, options)
 
-    unless (is_nil(handler)) do
-      Task.async(fn -> handler.call(payload, opts) end)
-      |> Task.await()
-    else
+    if is_nil(handler) do
       {:error, {:unknown_strategy, strategy}}
+    else
+      task = Task.async(fn -> handler.call(payload, opts) end)
+      {:ok, Task.await(task)}
     end
   end
 
@@ -63,11 +63,11 @@ defmodule Ravenx do
 
     opts = get_options(strategy, payload, options)
 
-    unless (is_nil(handler)) do
+    if is_nil(handler) do
+      {:error, {:unknown_strategy, strategy}}
+    else
       task = Task.async(fn -> handler.call(payload, opts) end)
       {:ok, task}
-    else
-      {:error, {:unknown_strategy, strategy}}
     end
   end
 
@@ -75,7 +75,7 @@ defmodule Ravenx do
   Function to get a Keyword list of registered strategies.
   """
   @spec available_strategies() :: keyword
-  def available_strategies() do
+  def available_strategies do
     [
       slack: Ravenx.Strategy.Slack,
       email: Ravenx.Strategy.Email
@@ -88,12 +88,11 @@ defmodule Ravenx do
   @spec get_options(atom, map, map) :: map
   defp get_options(strategy, payload, options) do
     # Get strategy configuration in application
-    app_config_opts = Application.get_env(:ravenx, strategy, [])
-    |> Enum.into(%{})
+    app_config_opts = Enum.into(Application.get_env(:ravenx, strategy, []), %{})
 
     # Get config module and call the function of this strategy (if any)
-    config_module_opts = Application.get_env(:ravenx, :config, nil)
-    |> call_config_module(strategy, payload)
+    module_name = Application.get_env(:ravenx, :config, nil)
+    config_module_opts = call_config_module(module_name, strategy, payload)
 
     # Merge options
     app_config_opts
@@ -106,7 +105,7 @@ defmodule Ravenx do
   @spec call_config_module(atom, atom, map) :: map
   defp call_config_module(module, _strategy, _payload) when is_nil(module), do: %{}
   defp call_config_module(module, strategy, payload) do
-    if (Keyword.has_key?(module.__info__(:functions), strategy)) do
+    if Keyword.has_key?(module.__info__(:functions), strategy) do
       apply(module, strategy, [payload])
     else
       %{}

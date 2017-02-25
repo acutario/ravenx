@@ -22,7 +22,7 @@ defmodule Ravenx.Strategy.Slack do
   """
   @spec call(%{title: binary, body: binary}, map) :: {:ok, binary} | {:error, {atom, any}}
   def call(%{title: title, body: body}, options \\ %{}) do
-    payload = %{ text: "*#{title}*\n#{body}" }
+    payload = %{text: "*#{title}*\n#{body}"}
     |> parse_options(options)
 
     url = options
