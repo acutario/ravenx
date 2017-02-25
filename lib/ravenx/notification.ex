@@ -15,11 +15,12 @@ defmodule Ravenx.Notification do
       Function dispatch the notification synchronously.
 
       The object received will be used as the `get_notifications_config` argument,
-      which should return a list of notification config lists.
+      which should return a keyword list of notification configs that have the
+      notification IDs as keys and the configuration tuple as value.
 
-      It will respond with a list of tuples (one for each element returned
-      by `get_notifications_config`), indicating for each notification if everything
-      was `:ok` or there was an `:error`.
+      It will respond with a keyword list that have the notification IDs as keys,
+      and a tuple indicating final state as value.
+      That tuple follows standard notification dispatch response.
 
       """
       @spec dispatch(any) :: [atom: {:ok | :error, any}]
@@ -33,11 +34,12 @@ defmodule Ravenx.Notification do
       Function dispatch the notification asynchronously.
 
       The object received will be used as the `get_notifications_config` argument,
-      which should return a list of notification config lists.
+      which should return a keyword list of notification configs that have the
+      notification IDs as keys and the configuration tuple as value.
 
-      It will respond with a list of tuples (one for each element returned
-      by `get_notifications_config`), indicating for each notification if everything
-      was `:ok` or there was an `:error`.
+      It will respond with a keyword list that have the notification IDs as keys,
+      and a tuple indicating final state as value.
+      That tuple follows standard notification dispatch response.
 
       """
       @spec dispatch_async(any) :: [atom: {:ok | :error, any}]
@@ -50,17 +52,17 @@ defmodule Ravenx.Notification do
   end
 
   @doc """
-  Function used to send a notification synchronously using a list with the
-  configuration of the notification.
+  Function used to send a notification synchronously using a configuration tuple
+  like the ones that `get_notifications_config` should return.
 
-  The list should have this objects:
+  The tuple should have this objects:
 
   1. Strategy atom: defining which strategy to use
   2. Payload map: including the payload data of the notification.
   3. Options map _(optional)_: the special configuration of the notification
 
-  It will respond with a tuple, indicating if everything was `:ok` or there was
-  an `:error`.
+  It will respond with a tuple, with an atom that could be `:ok` or `:error` and
+  the result of the operation, as an standard notification dispatch returns.
 
   """
   @spec dispatch_notification({atom, map, map} | {atom, map}) :: {:ok | :error, any}
@@ -78,17 +80,17 @@ defmodule Ravenx.Notification do
   end
 
   @doc """
-  Function used to send a notification asynchronously using a list with the
-  configuration of the notification.
+  Function used to send a notification synchronously using a configuration tuple
+  like the ones that `get_notifications_config` should return.
 
-  The list should have this objects:
+  The tuple should have this objects:
 
   1. Strategy atom: defining which strategy to use
   2. Payload map: including the payload data of the notification.
   3. Options map _(optional)_: the special configuration of the notification
 
-  It will respond with a tuple, indicating if everything is `:ok` or there was
-  an `:error`.
+  It will respond with a tuple, with an atom that could be `:ok` or `:error` and
+  the result of the operation, as an standard notification dispatch returns.
 
   """
   @spec dispatch_async_notification({atom, map, map} | {atom, map}) :: {:ok | :error, any}
