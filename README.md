@@ -20,11 +20,11 @@ iex> Ravenx.dispatch(:slack, %{title: "Hello world!", body: "Science is cool!"})
 ```
 
 Optionally, a third parameter containing a map of options (like URLs or
-secrets) can be passed.
+secrets) can be passed depending on strategy configuration needs.
 
 ## Multiple notifications
 
-You can implement notification modules taht will tell `Ravenx` which strategies should use to send a specific notification.
+You can implement notification modules that `Ravenx` can use to know which strategies should use to send a specific notification.
 
 To do it, you just need to `use Ravenx.Notification` and implement a callback function:
 
@@ -32,26 +32,29 @@ To do it, you just need to `use Ravenx.Notification` and implement a callback fu
 defmodule YourApp.Notification.NotifyUser do
   use Ravenx.Notification
 
-  def get_notifications_list(user) do
+  def get_notifications_config(user) do
     # In this function you can define which strategies use for your user (or
     # whatever you want to pass as argument) and return something like:
 
     [
-      [:slack, %{title: "Important notification!", body: "Wait..."}, %{channel: user.slack_username}],
-      [:email, %{subject: "Important notification!", html_body: "<h1>Wait...</h1>", to: user.email_address}],
-      [:wadus, %{text: "Important notification!"}, %{option1: value2}],
+      slack: {:slack, %{title: "Important notification!", body: "Wait..."}, %{channel: user.slack_username}},
+      email_user: {:email, %{subject: "Important notification!", html_body: "<h1>Wait...</h1>", to: user.email_address}},
+      email_company: {:email, %{subject: "Important notification about an user!", html_body: "<h1>Wait...</h1>", to: user.company.email_address}},
+      other_notification: {:invalid_strategy, %{text: "Important notification!"}, %{option1: value2}},
     ]
   end
 end
 ```
 
-Strategies can be used multiple times in a notification list (for example, if you want to notify multiple users via Slack).
+As seen above, strategies can be used multiple times in a notification list (to send multiple e-mails that have different payload, for example).
 
 **Note:** each notification entry in the returned list should include:
 
-1. Atom defining which strategy should be used.
-2. Payload map with the data of the notification.
-3. Optional options map for that specific notification.
+1. Atom defining the notification ID.
+2. A two or three element tuple containing:
+    1. Atom defining which strategy should be used.
+    2. Payload map with the data of the notification.
+    3. (Optional) Options map for that strategy.
 
 And then you can dispatch your notification using:
 
@@ -65,7 +68,17 @@ or asynchronously:
 iex> YourApp.Notification.NotifyUser.dispatch_async(user)
 ```
 
-Both will return a list with the responses for each notification sent.
+Both will return a list with the responses for each notification sent:
+
+```elixir
+iex> YourApp.Notification.NotifyUser.dispatch(user)
+[
+  slack: {:ok, ...},
+  email_user: {:ok, ...},
+  email_company: {:ok, ...},
+  other_notification: {:error, "invalid_strategy specified not defined"}
+]
+```
 
 ## Configuration
 Strategies usually needs configuration options. To solve that, there are three
