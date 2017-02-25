@@ -22,11 +22,11 @@ defmodule Ravenx.Notification do
       was `:ok` or there was an `:error`.
 
       """
-      @spec dispatch(any) :: [{atom, any}]
+      @spec dispatch(any) :: [atom: {atom, tuple}]
       def dispatch(opts) do
         opts
         |> get_notifications_config
-        |> Enum.map(&Ravenx.Notification.dispatch_notification/2)
+        |> Enum.map(fn(k, opts) -> {k, Ravenx.Notification.dispatch_notification(opts)} end)
       end
 
       @doc """
@@ -40,11 +40,11 @@ defmodule Ravenx.Notification do
       was `:ok` or there was an `:error`.
 
       """
-      @spec dispatch_async(any) :: [{atom, any}]
+      @spec dispatch_async(any) :: [atom: {atom, tuple}]
       def dispatch_async(opts) do
         opts
         |> get_notifications_config
-        |> Enum.map(&Ravenx.Notification.dispatch_async_notification/2)
+        |> Enum.map(fn(k, opts) -> {k, Ravenx.Notification.dispatch_async_notification(opts)} end)
       end
     end
   end
@@ -64,8 +64,8 @@ defmodule Ravenx.Notification do
 
   """
   @spec dispatch_notification(atom, list) :: {atom, any}
-  def dispatch_notification(key, notification) do
-    result = case notification do
+  def dispatch_notification(notification) do
+    case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch(strategy, payload, options)
       [strategy, payload] when is_atom(strategy) and is_map(payload) ->
@@ -75,8 +75,6 @@ defmodule Ravenx.Notification do
       _ ->
         {:error, "Notification config not valid"}
     end
-
-    {key, result}
   end
 
   @doc """
@@ -94,8 +92,8 @@ defmodule Ravenx.Notification do
 
   """
   @spec dispatch_async_notification(atom, list) :: {atom, any}
-  def dispatch_async_notification(key, notification) do
-    result = case notification do
+  def dispatch_async_notification(notification) do
+    case notification do
       [strategy, payload, options] when is_atom(strategy) and is_map(payload) and is_map(options) ->
         Ravenx.dispatch_async(strategy, payload, options)
       [strategy, payload] when is_atom(strategy) and is_map(payload) ->
@@ -105,7 +103,5 @@ defmodule Ravenx.Notification do
       _ ->
         {:error, "Notification config not valid"}
     end
-
-    {key, result}
   end
 end
