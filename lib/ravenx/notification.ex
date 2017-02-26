@@ -23,7 +23,7 @@ defmodule Ravenx.Notification do
       That tuple follows standard notification dispatch response.
 
       """
-      @spec dispatch(any) :: [atom: {:ok, any} | {:error, {atom, any}}]
+      @spec dispatch(any) :: [{Ravenx.notification_id, Ravenx.notification_result}]
       def dispatch(opts) do
         opts
         |> get_notifications_config
@@ -42,7 +42,7 @@ defmodule Ravenx.Notification do
       That tuple follows standard notification dispatch response.
 
       """
-      @spec dispatch_async(any) :: [atom: {:ok, any} | {:error, {atom, any}}]
+      @spec dispatch_async(any) :: [{Ravenx.notification_id, Ravenx.notification_result}]
       def dispatch_async(opts) do
         opts
         |> get_notifications_config
@@ -65,7 +65,7 @@ defmodule Ravenx.Notification do
   the result of the operation, as an standard notification dispatch returns.
 
   """
-  @spec dispatch_notification({atom, map, map} | {atom, map}) :: {:ok, any} | {:error, {atom, any}}
+  @spec dispatch_notification(Ravenx.notification_config) :: Ravenx.notification_result
   def dispatch_notification(notification) do
     case notification do
       {strategy, payload, options} when is_atom(strategy) and is_map(payload) and is_map(options) ->
@@ -93,7 +93,7 @@ defmodule Ravenx.Notification do
   the result of the operation, as an standard notification dispatch returns.
 
   """
-  @spec dispatch_async_notification({atom, map, map} | {atom, map}) :: {:ok, any} | {:error, {atom, any}}
+  @spec dispatch_async_notification(Ravenx.notification_config) :: Ravenx.notification_result
   def dispatch_async_notification(notification) do
     case notification do
       {strategy, payload, options} when is_atom(strategy) and is_map(payload) and is_map(options) ->

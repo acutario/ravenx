@@ -5,6 +5,14 @@ defmodule Ravenx do
   It includes and manages dispatching of messages through registered strategies.
   """
 
+  @type notification_id :: atom
+  @type notification_strategy :: atom
+  @type notification_payload :: map
+  @type notification_options :: map
+  @type notification_result :: {:ok, any} | {:error, {atom, any}}
+  @type notification_config :: {notification_strategy, notification_payload} |
+    {notification_strategy, notification_payload, notification_options}
+
   @doc """
   Dispatch a notification `payload` to a specified `strategy`.
 
@@ -21,7 +29,7 @@ defmodule Ravenx do
       {:error, {:unknown_strategy, :wadus}}
 
   """
-  @spec dispatch(atom, map, map) :: {:ok, any} | {:error, {atom, any}}
+  @spec dispatch(notification_strategy, notification_payload, notification_options) :: notification_result
   def dispatch(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -56,7 +64,7 @@ defmodule Ravenx do
       {:error, {:unknown_strategy, :wadus}}
 
   """
-  @spec dispatch_async(atom, map, map) :: {:ok, any} | {:error, {atom, any}}
+  @spec dispatch_async(notification_strategy, notification_payload, notification_options) :: notification_result
   def dispatch_async(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
@@ -85,7 +93,7 @@ defmodule Ravenx do
   # Private function to get definitive options keyword list by getting options
   # from three different places.
   #
-  @spec get_options(atom, map, map) :: map
+  @spec get_options(notification_strategy, notification_payload, notification_options) :: notification_options
   defp get_options(strategy, payload, options) do
     # Get strategy configuration in application
     app_config_opts = Enum.into(Application.get_env(:ravenx, strategy, []), %{})
@@ -102,7 +110,7 @@ defmodule Ravenx do
 
   # Private function to call the config module if it's defined.
   #
-  @spec call_config_module(atom, atom, map) :: map
+  @spec call_config_module(atom, notification_strategy, notification_payload) :: notification_options
   defp call_config_module(module, _strategy, _payload) when is_nil(module), do: %{}
   defp call_config_module(module, strategy, payload) do
     if Keyword.has_key?(module.__info__(:functions), strategy) do
