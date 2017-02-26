@@ -5,6 +5,14 @@ defmodule Ravenx do
   It includes and manages dispatching of messages through registered strategies.
   """
 
+  @type notif_id :: atom
+  @type notif_strategy :: atom
+  @type notif_payload :: map
+  @type notif_options :: map
+  @type notif_result :: {:ok, any} | {:error, {atom, any}}
+  @type notif_config :: {notif_strategy, notif_payload} |
+    {notif_strategy, notif_payload, notif_options}
+
   @doc """
   Dispatch a notification `payload` to a specified `strategy`.
 
@@ -18,21 +26,21 @@ defmodule Ravenx do
       {:ok, "ok"}
 
       iex> Ravenx.dispatch(:wadus, %{title: "Hello world!", body: "Science is cool"})
-      {:error, "wadus strategy not defined"}
+      {:error, {:unknown_strategy, :wadus}}
 
   """
-  @spec dispatch(atom, map, map) :: {atom, any}
+  @spec dispatch(notif_strategy, notif_payload, notif_options) :: notif_result
   def dispatch(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
 
     opts = get_options(strategy, payload, options)
 
-    unless (is_nil(handler)) do
-      Task.async(fn -> handler.call(payload, opts) end)
-      |> Task.await()
+    if is_nil(handler) do
+      {:error, {:unknown_strategy, strategy}}
     else
-      {:error, "#{strategy} strategy not defined"}
+      task = Task.async(fn -> handler.call(payload, opts) end)
+      {:ok, Task.await(task)}
     end
   end
 
@@ -53,21 +61,21 @@ defmodule Ravenx do
       {:ok, "ok"}
 
       iex> Ravenx.dispatch_async(:wadus, %{title: "Hello world!", body: "Science is cool"})
-      {:error, "wadus strategy not defined"}
+      {:error, {:unknown_strategy, :wadus}}
 
   """
-  @spec dispatch_async(atom, map, map) :: {atom, any}
+  @spec dispatch_async(notif_strategy, notif_payload, notif_options) :: notif_result
   def dispatch_async(strategy, payload, options \\ %{}) do
     handler = available_strategies
     |> Keyword.get(strategy)
 
     opts = get_options(strategy, payload, options)
 
-    unless (is_nil(handler)) do
+    if is_nil(handler) do
+      {:error, {:unknown_strategy, strategy}}
+    else
       task = Task.async(fn -> handler.call(payload, opts) end)
       {:ok, task}
-    else
-      {:error, "#{strategy} specified not defined"}
     end
   end
 
@@ -75,7 +83,7 @@ defmodule Ravenx do
   Function to get a Keyword list of registered strategies.
   """
   @spec available_strategies() :: keyword
-  def available_strategies() do
+  def available_strategies do
     [
       slack: Ravenx.Strategy.Slack,
       email: Ravenx.Strategy.Email
@@ -85,13 +93,14 @@ defmodule Ravenx do
   # Private function to get definitive options keyword list by getting options
   # from three different places.
   #
+  @spec get_options(notif_strategy, notif_payload, notif_options) :: notif_options
   defp get_options(strategy, payload, options) do
     # Get strategy configuration in application
-    app_config_opts = Application.get_env(:ravenx, strategy, %{})
+    app_config_opts = Enum.into(Application.get_env(:ravenx, strategy, []), %{})
 
     # Get config module and call the function of this strategy (if any)
-    config_module_opts = Application.get_env(:ravenx, :config, nil)
-    |> call_config_module(strategy, payload)
+    module_name = Application.get_env(:ravenx, :config, nil)
+    config_module_opts = call_config_module(module_name, strategy, payload)
 
     # Merge options
     app_config_opts
@@ -101,9 +110,10 @@ defmodule Ravenx do
 
   # Private function to call the config module if it's defined.
   #
+  @spec call_config_module(atom, notif_strategy, notif_payload) :: notif_options
   defp call_config_module(module, _strategy, _payload) when is_nil(module), do: %{}
   defp call_config_module(module, strategy, payload) do
-    if (Keyword.has_key?(module.__info__(:functions), strategy)) do
+    if Keyword.has_key?(module.__info__(:functions), strategy) do
       apply(module, strategy, [payload])
     else
       %{}

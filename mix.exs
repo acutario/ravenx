@@ -51,7 +51,8 @@ defmodule Ravenx.Mixfile do
       {:bamboo, "~> 0.7.0"},
       {:bamboo_smtp, "~> 1.2.1"},
       {:ex_doc, ">= 0.0.0", only: :dev},
-      {:dialyxir, "~> 0.4", only: :dev}
+      {:dialyxir, "~> 0.4", only: :dev},
+      {:credo, "~> 0.5", only: [:dev, :test]}
     ]
   end
 
