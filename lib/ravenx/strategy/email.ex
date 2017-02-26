@@ -5,6 +5,8 @@ defmodule Ravenx.Strategy.Email do
   Used to dispatch notifications via email.
   """
 
+  @behaviour Ravenx.StrategyBehaviour
+
   alias Bamboo.Mailer
 
   @doc """

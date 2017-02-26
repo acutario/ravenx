@@ -5,6 +5,8 @@ defmodule Ravenx.Strategy.Slack do
   Used to dispatch notifications to Slack service.
   """
 
+  @behaviour Ravenx.StrategyBehaviour
+
   @doc """
   Function used to send a notification to Slack.
 
