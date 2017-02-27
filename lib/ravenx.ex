@@ -31,8 +31,7 @@ defmodule Ravenx do
   """
   @spec dispatch(notif_strategy, notif_payload, notif_options) :: notif_result
   def dispatch(strategy, payload, options \\ %{}) do
-    handler = available_strategies
-    |> Keyword.get(strategy)
+    handler = Keyword.get(available_strategies(), strategy)
 
     opts = get_options(strategy, payload, options)
 
@@ -66,8 +65,7 @@ defmodule Ravenx do
   """
   @spec dispatch_async(notif_strategy, notif_payload, notif_options) :: notif_result
   def dispatch_async(strategy, payload, options \\ %{}) do
-    handler = available_strategies
-    |> Keyword.get(strategy)
+    handler = Keyword.get(available_strategies(), strategy)
 
     opts = get_options(strategy, payload, options)
 
