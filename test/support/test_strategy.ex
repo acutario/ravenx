@@ -15,6 +15,6 @@ defmodule Ravenx.Test.TestStrategy do
 
   """
   @spec call(map, map) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
-  def call(%{result: true}, _opts), do: {:ok, true}
-  def call(payload, _opts), do: {:error, {:expected_error, false}}
+  def call(%{result: true}, _), do: {:ok, true}
+  def call(_, _), do: {:error, {:expected_error, false}}
 end
