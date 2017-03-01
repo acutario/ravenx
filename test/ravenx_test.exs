@@ -2,17 +2,18 @@ defmodule RavenxTest do
   use ExUnit.Case
   # doctest Ravenx
 
-  test "dispatch synchronously :ok notification" do
-    {status, result} = Ravenx.dispatch(:dummy, %{result: true})
+  alias Ravenx.Strategy.Dummy, as: DummyStrategy
 
-    assert {:ok, true} = {status, result}
+  test "dispatch synchronously :ok notification" do
+    result = Ravenx.dispatch(:dummy, %{result: true})
+
+    assert result == DummyStrategy.get_ok_result
   end
 
   test "dispatch synchronously :error notification" do
-    {status, result} = Ravenx.dispatch(:dummy, %{result: false})
+    result = Ravenx.dispatch(:dummy, %{result: false})
 
-    assert {:error, result} = {status, result}
-    assert {:expected_error, false} = result
+    assert result == DummyStrategy.get_error_result
   end
 
   test "dispatch async should return a Task object" do
@@ -26,13 +27,13 @@ defmodule RavenxTest do
     {status, task} = Ravenx.dispatch_async(:dummy, %{result: true})
 
     assert {:ok, task} = {status, task}
-    assert {:ok, true} = Task.await(task)
+    assert Task.await(task) == DummyStrategy.get_ok_result
   end
 
   test "dispatch asynchronously :error notification" do
     {status, task} = Ravenx.dispatch_async(:dummy, %{result: false})
 
     assert {:ok, task} = {status, task}
-    assert {:error, {:expected_error, false}} = Task.await(task)
+    assert Task.await(task) == DummyStrategy.get_error_result
   end
 end

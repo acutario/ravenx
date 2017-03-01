@@ -15,6 +15,9 @@ defmodule Ravenx.Strategy.Dummy do
 
   """
   @spec call(map, map) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
-  def call(%{result: true}, _), do: {:ok, true}
-  def call(_, _), do: {:error, {:expected_error, false}}
+  def call(%{result: true}, _), do: get_ok_result()
+  def call(_, _), do: get_error_result()
+
+  def get_ok_result, do: {:ok, true}
+  def get_error_result, do: {:error, {:expected_error, false}}
 end

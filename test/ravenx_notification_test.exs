@@ -1,6 +1,8 @@
 defmodule RavenxNotificationTest do
   use ExUnit.Case
 
+  alias Ravenx.Strategy.Dummy, as: DummyStrategy
+
   test "dispatch multiple notifications synchronously returns expected keys" do
     result = Ravenx.Test.TestNotification.dispatch(true)
 
@@ -12,10 +14,9 @@ defmodule RavenxNotificationTest do
     result = Ravenx.Test.TestNotification.dispatch(true)
 
     dummy_result = Keyword.get(result, :dummy)
-    assert {:ok, true} = dummy_result
+    assert dummy_result == DummyStrategy.get_ok_result
 
     dummy_not_result = Keyword.get(result, :dummy_not)
-    assert {:error, payload} = dummy_not_result
-    assert {:expected_error, false} = payload
+    assert dummy_not_result == DummyStrategy.get_error_result
   end
 end
