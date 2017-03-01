@@ -36,4 +36,13 @@ defmodule RavenxTest do
     assert {:ok, task} = {status, task}
     assert Task.await(task) == DummyStrategy.get_error_result
   end
+
+  test "custom strategies can be added using configuration" do
+    strategies = Application.get_env(:ravenx, :strategies, [])
+    available_strategies = Ravenx.available_strategies
+
+    strategies
+    |> Keyword.keys()
+    |> Enum.each(fn strategy -> assert Keyword.has_key?(available_strategies, strategy) end)
+  end
 end
