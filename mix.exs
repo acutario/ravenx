@@ -10,6 +10,7 @@ defmodule Ravenx.Mixfile do
       start_permanent: Mix.env == :prod,
       description: description(),
       package: package(),
+      elixirc_paths: elixirc_paths(Mix.env),
       deps: deps(),
       docs: docs(),
       dialyzer: [plt_add_deps: :transitive]
@@ -78,4 +79,10 @@ defmodule Ravenx.Mixfile do
      links: %{"GitHub" => "https://github.com/acutario/ravenx"}
     ]
   end
+
+  # Always compile files in "lib". In tests compile also files in
+  # "test/support"
+  def elixirc_paths(:test), do: elixirc_paths() ++ ["test/support"]
+  def elixirc_paths(_), do: elixirc_paths()
+  def elixirc_paths, do: ["lib"]
 end
