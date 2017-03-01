@@ -31,14 +31,7 @@ defmodule Ravenx do
   """
   @spec dispatch(notif_strategy, notif_payload, notif_options) :: notif_result
   def dispatch(strategy, payload, options \\ %{}) do
-    handler = Keyword.get(available_strategies(), strategy)
-
-    opts = get_options(strategy, payload, options)
-
-    if is_nil(handler) do
-      {:error, {:unknown_strategy, strategy}}
-    else
-      task = Task.async(fn -> handler.call(payload, opts) end)
+    with {:ok, task} <- dispatch_async(strategy, payload, options) do
       Task.await(task)
     end
   end
