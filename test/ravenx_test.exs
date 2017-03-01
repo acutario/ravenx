@@ -46,6 +46,14 @@ defmodule RavenxTest do
     |> Enum.each(fn strategy -> assert Keyword.has_key?(available_strategies, strategy) end)
   end
 
+  test "test custom runtime options in configuration" do
+    configuration = %{foo: "bar"}
+
+    {:ok, result} = Ravenx.dispatch(:test, %{}, configuration)
+
+    assert configuration == result
+  end
+
   test "test custom options in configuration" do
     configuration = Application.get_env(:ravenx, :test_config, [])
     |> Enum.into(%{})
@@ -59,6 +67,23 @@ defmodule RavenxTest do
     configuration = Ravenx.Test.TestConfig.test_module(%{})
     {:ok, result} = Ravenx.dispatch(:test_module, %{}, %{})
 
+    assert configuration == result
+  end
+
+  test "test custom multiple options in module" do
+    # Get config from the three possible vias
+    runtime_config = %{foo: "bar"}
+    app_config = Application.get_env(:ravenx, :test_multiple, [])
+    |> Enum.into(%{})
+    module_config = Ravenx.Test.TestConfig.test_multiple(%{})
+
+    # Merge them
+    configuration = runtime_config
+    |> Map.merge(app_config)
+    |> Map.merge(module_config)
+
+    # Call and check the result
+    {:ok, result} = Ravenx.dispatch(:test_multiple, %{}, runtime_config)
     assert configuration == result
   end
 end
