@@ -1,6 +1,5 @@
 defmodule RavenxTest do
   use ExUnit.Case
-  # doctest Ravenx
 
   alias Ravenx.Strategy.Dummy, as: DummyStrategy
 

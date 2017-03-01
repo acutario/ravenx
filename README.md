@@ -1,5 +1,11 @@
 # Ravenx
 
+
+[![Current Version](https://img.shields.io/hexpm/v/ravenx.svg)](https://hex.pm/packages/ravenx)
+[![Build Status](https://travis-ci.org/acutario/ravenx.svg?branch=master)](https://travis-ci.org/acutario/ravenx)
+
+https://img.shields.io/hexpm/v/ravenx.svg
+
 Notification dispatch library for Elixir applications (WIP).
 
 ## Installation
