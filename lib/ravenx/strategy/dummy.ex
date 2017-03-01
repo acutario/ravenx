@@ -1,8 +1,8 @@
-defmodule Ravenx.Test.TestStrategy do
+defmodule Ravenx.Strategy.Dummy do
   @moduledoc """
-  Ravenx Test strategy.
+  Ravenx Dummy strategy.
 
-  Used to test dispatching notifications.
+  Used to avoid dispatching real notifications.
   """
 
   @behaviour Ravenx.StrategyBehaviour
