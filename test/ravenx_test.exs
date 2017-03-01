@@ -45,4 +45,20 @@ defmodule RavenxTest do
     |> Keyword.keys()
     |> Enum.each(fn strategy -> assert Keyword.has_key?(available_strategies, strategy) end)
   end
+
+  test "test custom options in configuration" do
+    configuration = Application.get_env(:ravenx, :test_config, [])
+    |> Enum.into(%{})
+
+    {:ok, result} = Ravenx.dispatch(:test_config, %{}, %{})
+
+    assert configuration == result
+  end
+
+  test "test custom options in module" do
+    configuration = Ravenx.Test.TestConfig.test_module(%{})
+    {:ok, result} = Ravenx.dispatch(:test_module, %{}, %{})
+
+    assert configuration == result
+  end
 end
