@@ -39,7 +39,7 @@ defmodule Ravenx do
       {:error, {:unknown_strategy, strategy}}
     else
       task = Task.async(fn -> handler.call(payload, opts) end)
-      {:ok, Task.await(task)}
+      Task.await(task)
     end
   end
 
@@ -82,10 +82,13 @@ defmodule Ravenx do
   """
   @spec available_strategies() :: keyword
   def available_strategies do
-    [
+    bundled_strategies = [
       slack: Ravenx.Strategy.Slack,
       email: Ravenx.Strategy.Email
     ]
+
+    bundled_strategies
+    |> Keyword.merge(Application.get_env(:ravenx, :strategies, []))
   end
 
   # Private function to get definitive options keyword list by getting options
