@@ -2,6 +2,16 @@
 
 Notification dispatch library for Elixir applications (WIP).
 
+## Installation
+
+The package can be installed as simply as adding `ravenx` to your list of dependencies in `mix.exs`:
+
+```elixir
+  def deps do
+    [{:ravenx, "~> 1.0.0"}]
+  end
+```
+
 ## Single notification
 
 Sending a single notification is as simply as calling this method:
