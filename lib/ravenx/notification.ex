@@ -27,7 +27,7 @@ defmodule Ravenx.Notification do
       def dispatch(opts) do
         opts
         |> get_notifications_config
-        |> Enum.map(fn(k, opts) -> {k, Ravenx.Notification.dispatch_notification(opts)} end)
+        |> Enum.map(fn({k, opts}) -> {k, Ravenx.Notification.dispatch_notification(opts)} end)
       end
 
       @doc """
@@ -46,7 +46,7 @@ defmodule Ravenx.Notification do
       def dispatch_async(opts) do
         opts
         |> get_notifications_config
-        |> Enum.map(fn(k, opts) -> {k, Ravenx.Notification.dispatch_async_notification(opts)} end)
+        |> Enum.map(fn({k, opts}) -> {k, Ravenx.Notification.dispatch_async_notification(opts)} end)
       end
     end
   end
