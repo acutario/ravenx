@@ -31,8 +31,7 @@ defmodule Ravenx do
   """
   @spec dispatch(notif_strategy, notif_payload, notif_options) :: notif_result
   def dispatch(strategy, payload, options \\ %{}) do
-    handler = available_strategies
-    |> Keyword.get(strategy)
+    handler = Keyword.get(available_strategies(), strategy)
 
     opts = get_options(strategy, payload, options)
 
@@ -40,7 +39,7 @@ defmodule Ravenx do
       {:error, {:unknown_strategy, strategy}}
     else
       task = Task.async(fn -> handler.call(payload, opts) end)
-      {:ok, Task.await(task)}
+      Task.await(task)
     end
   end
 
@@ -66,8 +65,7 @@ defmodule Ravenx do
   """
   @spec dispatch_async(notif_strategy, notif_payload, notif_options) :: notif_result
   def dispatch_async(strategy, payload, options \\ %{}) do
-    handler = available_strategies
-    |> Keyword.get(strategy)
+    handler = Keyword.get(available_strategies(), strategy)
 
     opts = get_options(strategy, payload, options)
 
@@ -84,10 +82,14 @@ defmodule Ravenx do
   """
   @spec available_strategies() :: keyword
   def available_strategies do
-    [
+    bundled_strategies = [
       slack: Ravenx.Strategy.Slack,
-      email: Ravenx.Strategy.Email
+      email: Ravenx.Strategy.Email,
+      dummy: Ravenx.Strategy.Dummy
     ]
+
+    bundled_strategies
+    |> Keyword.merge(Application.get_env(:ravenx, :strategies, []))
   end
 
   # Private function to get definitive options keyword list by getting options

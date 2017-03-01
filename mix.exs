@@ -4,12 +4,13 @@ defmodule Ravenx.Mixfile do
   def project do
     [
       app: :ravenx,
-      version: "0.1.2",
+      version: "1.0.0",
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
       description: description(),
       package: package(),
+      elixirc_paths: elixirc_paths(Mix.env),
       deps: deps(),
       docs: docs(),
       dialyzer: [plt_add_deps: :transitive]
@@ -78,4 +79,10 @@ defmodule Ravenx.Mixfile do
      links: %{"GitHub" => "https://github.com/acutario/ravenx"}
     ]
   end
+
+  # Always compile files in "lib". In tests compile also files in
+  # "test/support"
+  def elixirc_paths(:test), do: elixirc_paths() ++ ["test/support"]
+  def elixirc_paths(_), do: elixirc_paths()
+  def elixirc_paths, do: ["lib"]
 end

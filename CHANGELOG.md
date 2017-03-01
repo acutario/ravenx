@@ -1,5 +1,13 @@
 # Ravenx Changelog
 
+## v 1.0.0
+
+* Add custom strategies support
+* Normalize error responses
+* Use identifiers as keys in multiple notification dispatching
+* Fix issue with e-mail strategy.
+* Add tests
+
 ## v 0.1.2
 
 * Fix bug that avoid email dispatching using SMTP.
