@@ -4,6 +4,18 @@ defmodule RavenxTest do
 
   alias Ravenx.Strategy.Dummy, as: DummyStrategy
 
+  test "dispatch synchronously with unknown strategy will return error" do
+    result = Ravenx.dispatch(:wadus, %{})
+
+    assert result == {:error, {:unknown_strategy, :wadus}}
+  end
+
+  test "dispatch asynchronously with unknown strategy will return error" do
+    result = Ravenx.dispatch_async(:wadus, %{})
+
+    assert result == {:error, {:unknown_strategy, :wadus}}
+  end
+
   test "dispatch synchronously :ok notification" do
     result = Ravenx.dispatch(:dummy, %{result: true})
 
