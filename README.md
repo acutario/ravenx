@@ -127,3 +127,20 @@ Configuration can also be mixed by using the three methods:
  * Static configuration on application configuration.
  * Dynamic configuration common to more than one scenario using a configuration module.
  * Call-specific configuration sending a config Keyword list on `dispatch` method.
+
+## Custom strategies
+
+Maybe there is some internal service you need to call to send notifications, so there is a way to create custom strategies for yout projects.
+
+First of all, you need to create a module that meet the [required behaviour](https://github.com/acutario/ravenx/blob/master/lib/ravenx/notification_behaviour.ex), like the example you can see [here](https://github.com/acutario/ravenx/blob/master/lib/ravenx/strategy/dummy.ex).
+
+Then you can define custom strategies in application configuration:
+
+```elixir
+config :ravenx,
+  strategies: [
+    my_strategy: YourApp.MyStrategy
+  ]
+```
+
+and start using your strategy to deliver notifications using the atom assigned (in the example, `my_strategy`).
