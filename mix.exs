@@ -28,7 +28,7 @@ defmodule Ravenx.Mixfile do
         :bamboo_smtp,
       ],
       included_applications: [
-        :httpoison
+        :httpoison,
         :poison,
       ]
     ]
@@ -46,7 +46,6 @@ defmodule Ravenx.Mixfile do
   defp deps do
     [
       {:poison, "~> 2.0 or ~> 3.0"},
-      {:httpotion, "~> 3.0"},
       {:httpoison, "~> 0.10.0"},
       {:bamboo, "~> 0.7.0"},
       {:bamboo_smtp, "~> 1.2.1"},
