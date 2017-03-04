@@ -58,10 +58,12 @@ defmodule Ravenx.Strategy.Slack do
 
     HTTPoison.start
     case HTTPoison.post(url, json_payload, header) do
-      %HTTPoison.Response{body: response, status_code: 200} ->
+      {:ok, %HTTPoison.Response{body: response, status_code: 200}} ->
         {:ok, response}
-      %HTTPoison.Response{body: response} ->
+      {:ok, %HTTPoison.Response{body: response}} ->
         {:error, {:error_response, response}}
+      {:error, %HTTPoison.Error{reason: reason}} ->
+        {:error, {:error, reason}}
       _ = e ->
         {:error, {:unknown_response, e}}
     end
