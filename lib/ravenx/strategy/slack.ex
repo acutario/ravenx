@@ -23,7 +23,8 @@ defmodule Ravenx.Strategy.Slack do
 
   """
   @spec call(%{title: binary, body: binary}, map) :: {:ok, binary} | {:error, {atom, any}}
-  def call(%{text: text} = payload, options \\ %{}) do
+  def call(payload, options \\ %{})
+  def call(%{text: _text} = payload, options) do
     url = options
     |> Map.get(:url)
 
@@ -31,6 +32,7 @@ defmodule Ravenx.Strategy.Slack do
     |> parse_options(options)
     |> send_notification(url)
   end
+  def call(_payload, _opts), do: {:error, {:missing_payload, :text}}
 
   # Private function to get options from Keyword received and apply it to the
   # payload.
