@@ -23,8 +23,8 @@ defmodule Ravenx do
     pool_options = [
       name: {:local, :dispatcher_pool},
       worker_module: Ravenx.DispatchWorker,
-      size: 5,
-      max_overflow: 10
+      size: 2,
+      max_overflow: 0
     ]
 
 

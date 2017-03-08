@@ -97,4 +97,14 @@ defmodule RavenxTest do
     {:ok, result} = Ravenx.dispatch(:test_multiple, %{}, runtime_config)
     assert configuration == result
   end
+
+  test "creating more notifications dispatch jobs that workers" do
+    jobs = 1..50
+
+    jobs
+    |> Enum.map(fn(_j) -> Ravenx.dispatch_async(:sleep, %{}, %{}) end)
+    |> Enum.each(fn({:ok, pid}) ->
+        assert Task.await(pid) == {:ok, %{}}
+      end)
+  end
 end
