@@ -22,8 +22,10 @@ defmodule Ravenx.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
+      mod: {Ravenx, []},
       applications: [
         :logger,
+        :poolboy,
         :bamboo,
         :bamboo_smtp,
       ],
@@ -46,6 +48,7 @@ defmodule Ravenx.Mixfile do
   defp deps do
     [
       {:poison, "~> 2.0 or ~> 3.0"},
+      {:poolboy, "~> 1.5"},
       {:httpoison, "~> 0.10.0"},
       {:bamboo, "~> 0.7.0"},
       {:bamboo_smtp, "~> 1.2.1"},

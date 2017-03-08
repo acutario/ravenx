@@ -5,6 +5,8 @@ defmodule Ravenx do
   It includes and manages dispatching of messages through registered strategies.
   """
 
+  use Application
+
   @type notif_id :: atom
   @type notif_strategy :: atom
   @type notif_payload :: map
@@ -12,6 +14,30 @@ defmodule Ravenx do
   @type notif_result :: {:ok, any} | {:error, {atom, any}}
   @type notif_config :: {notif_strategy, notif_payload} |
     {notif_strategy, notif_payload, notif_options}
+
+  # See http://elixir-lang.org/docs/stable/elixir/Application.html
+  # for more information on OTP Applications
+  def start(_type, _args) do
+    import Supervisor.Spec
+
+    pool_options = [
+      name: {:local, :dispatcher_pool},
+      worker_module: Ravenx.DispatchWorker,
+      size: 5,
+      max_overflow: 10
+    ]
+
+
+    # Define workers and child supervisors to be supervised
+    children = [
+      :poolboy.child_spec(:dispatcher_pool, pool_options, [])
+    ]
+
+    # See http://elixir-lang.org/docs/stable/elixir/Supervisor.html
+    # for other strategies and supported options
+    opts = [strategy: :one_for_one, name: Ravenx.Supervisor]
+    Supervisor.start_link(children, opts)
+  end
 
   @doc """
   Dispatch a notification `payload` to a specified `strategy`.
@@ -65,7 +91,9 @@ defmodule Ravenx do
     if is_nil(handler) do
       {:error, {:unknown_strategy, strategy}}
     else
-      task = Task.async(fn -> handler.call(payload, opts) end)
+      task = Task.async(fn ->
+        :poolboy.transaction(:dispatcher_pool, fn(worker)-> :gen_server.call(worker, {:dispatch, handler, payload, opts}) end)
+      end)
       {:ok, task}
     end
   end
