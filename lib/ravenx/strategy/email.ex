@@ -70,8 +70,8 @@ defmodule Ravenx.Strategy.Email do
   # passed
   @spec send_email(Bamboo.Email.t, map) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
 
-  defp send_email(%Bamboo.Email{to: nil}, %{adapter: _adapter}), do: {:error, {:missing_config, :to}}
-  defp send_email(%Bamboo.Email{from: nil}, %{adapter: _adapter}), do: {:error, {:missing_config, :from}}
+  defp send_email(%Bamboo.Email{to: nil}, _opts), do: {:error, {:missing_config, :to}}
+  defp send_email(%Bamboo.Email{from: nil}, _opts), do: {:error, {:missing_config, :from}}
 
   defp send_email(%Bamboo.Email{} = email, opts) do
     adapter = opts
