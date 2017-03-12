@@ -74,9 +74,11 @@ defmodule Ravenx.Strategy.Email do
   defp send_email(%Bamboo.Email{from: nil}, %{adapter: _adapter}), do: {:error, {:missing_config, :from}}
 
   defp send_email(%Bamboo.Email{} = email, opts) do
-    adapter = Map.get(opts, :adapter)
+    adapter = opts
+    |> Map.get(:adapter)
+    |> available_adapter()
 
-    case available_adapter(adapter) do
+    case adapter do
       {:ok, adapter} ->
         try do
           # We must tell the adapter to fulfill the options
@@ -93,7 +95,7 @@ defmodule Ravenx.Strategy.Email do
     end
   end
 
-  defp send_email(_email, _opts), do: {:error, {:missing_config, :adapter}}
+  defp send_email(_email, _opts), do: {:error, {:unknown_error, nil}}
 
   # Private function to get information from payload and apply to the Bamboo
   # email object.
