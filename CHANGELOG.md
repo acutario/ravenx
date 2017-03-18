@@ -1,5 +1,10 @@
 # Ravenx Changelog
 
+## v 1.1.0
+
+* Use HTTPoison instead of HTTPotion
+* Fix error when using tuple contacts in e-mail strategy
+
 ## v 1.0.0
 
 * Add custom strategies support
