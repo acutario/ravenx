@@ -44,14 +44,16 @@ defmodule Ravenx.Strategy.Email do
   #
   @spec available_adapters() :: keyword
   def available_adapters do
-    [
-      mailgun: Bamboo.MailgunAdapter,
-      mandrill: Bamboo.MandrillAdapter,
-      sendgrid: Bamboo.SendgridAdapter,
-      smtp: Bamboo.SMTPAdapter,
-      local: Bamboo.LocalAdapter,
-      test: Bamboo.TestAdapter
-    ]
+    default_adapters =
+      [
+        mailgun: Bamboo.MailgunAdapter,
+        mandrill: Bamboo.MandrillAdapter,
+        sendgrid: Bamboo.SendgridAdapter,
+        smtp: Bamboo.SMTPAdapter,
+        local: Bamboo.LocalAdapter,
+        test: Bamboo.TestAdapter
+      ]
+    Keyword.merge(default_adapters, Application.get_env(:ravenx, :bamboo_adapters) ||  [])
   end
 
   # Tries to get an adapter form list of available adapters
