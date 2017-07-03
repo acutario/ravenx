@@ -1,5 +1,11 @@
 # Ravenx Changelog
 
+## v 1.1.1
+
+* Fix circular dependencies (thanks to @mkaravaev)
+* Update dependencies for Elixir 1.5.0
+* Use non-retired version of hackney
+
 ## v 1.1.0
 
 * Use HTTPoison instead of HTTPotion

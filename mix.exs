@@ -4,7 +4,7 @@ defmodule Ravenx.Mixfile do
   def project do
     [
       app: :ravenx,
-      version: "1.1.0",
+      version: "1.1.1",
       elixir: "~> 1.3",
       build_embedded: Mix.env == :prod,
       start_permanent: Mix.env == :prod,
