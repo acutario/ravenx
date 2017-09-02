@@ -16,6 +16,20 @@ The package can be installed as simply as adding `ravenx` to your list of depend
   end
 ```
 
+## Strategies
+
+We currently support Slack and E-mail notifications (but there are more to come!).
+
+Also, there is the possibility of creating 3rd party integrations that works with Ravenx, as mentioned bellow
+
+### 3rd party strategies
+
+Some amazing people created 3rd party strategies to use Ravenx with more services:
+
+* **Pusher** (thanks to [@behind-design](https://github.com/behind-design)): [hex.pm](https://hex.pm/packages/ravenx_pusher) | [GitHub](https://github.com/behind-design/ravenx-pusher)
+
+Anyone can create a strategy that works with Ravenx, so if you have one, please let us know to add it to this list.
+
 ## Single notification
 
 Sending a single notification is as simply as calling this method:
