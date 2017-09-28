@@ -38,7 +38,7 @@ Sending a single notification is as simply as calling this method:
 iex> Ravenx.dispatch(strategy, payload)
 ```
 
-In which `stratey` is an atom indicating one of the defined strategies and the
+In which `strategy` is an atom indicating one of the defined strategies and the
 `payload` is a map with information to dispatch the notification.
 
 For example:
