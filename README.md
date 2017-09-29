@@ -27,6 +27,7 @@ Also, there is the possibility of creating 3rd party integrations that works wit
 Some amazing people created 3rd party strategies to use Ravenx with more services:
 
 * **Pusher** (thanks to [@behind-design](https://github.com/behind-design)): [hex.pm](https://hex.pm/packages/ravenx_pusher) | [GitHub](https://github.com/behind-design/ravenx-pusher)
+* **Telegram** (thanks to [@maratgaliev](https://github.com/maratgaliev)): [hex.pm](https://hex.pm/packages/ravenx_telegram) | [GitHub](https://github.com/maratgaliev/ravenx_telegram)
 
 Anyone can create a strategy that works with Ravenx, so if you have one, please let us know to add it to this list.
 
