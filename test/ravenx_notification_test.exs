@@ -46,4 +46,23 @@ defmodule RavenxNotificationTest do
     {:ok, task} = Keyword.get(result, :dummy_not)
     assert Task.await(task) == DummyStrategy.get_error_result
   end
+
+  test "dispatch multiple notifications unlinked returns expected keys" do
+    result = Ravenx.Test.TestNotification.dispatch_nolink(true)
+
+    assert Keyword.has_key?(result, :dummy)
+    assert Keyword.has_key?(result, :dummy_not)
+  end
+
+  test "dispatch multiple notifications asynchronously returns expected PIDs" do
+    result = Ravenx.Test.TestNotification.dispatch_nolink(true)
+
+    dummy_result = Keyword.get(result, :dummy)
+    assert {:ok, dummy_result_pid} = dummy_result
+    assert is_pid(dummy_result_pid)
+
+    dummy_not_result = Keyword.get(result, :dummy_not)
+    assert {:ok, dummy_not_result_pid} = dummy_not_result
+    assert is_pid(dummy_not_result_pid)
+  end
 end

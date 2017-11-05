@@ -15,6 +15,12 @@ defmodule RavenxTest do
     assert result == {:error, {:unknown_strategy, :wadus}}
   end
 
+  test "dispatch unlinked with unknown strategy will return error" do
+    result = Ravenx.dispatch_nolink(:wadus, %{})
+
+    assert result == {:error, {:unknown_strategy, :wadus}}
+  end
+
   test "dispatch synchronously :ok notification" do
     result = Ravenx.dispatch(:dummy, %{result: true})
 
@@ -32,6 +38,12 @@ defmodule RavenxTest do
 
     assert {:ok, %Task{}} = {status, task}
     assert is_pid(task.pid)
+  end
+
+  test "dispatch unlink should return a PID" do
+    {:ok, pid} = Ravenx.dispatch_nolink(:dummy, %{result: true})
+
+    assert is_pid(pid)
   end
 
   test "dispatch asynchronously :ok notification" do
