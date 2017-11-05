@@ -12,6 +12,7 @@ defmodule Ravenx do
   @type notif_result :: {:ok, any} | {:error, {atom, any}}
   @type notif_config :: {notif_strategy, notif_payload} |
     {notif_strategy, notif_payload, notif_options}
+  @type dispatch_type :: :sync | :async | :nolink
 
   @doc """
   Dispatch a notification `payload` to a specified `strategy`.
@@ -38,6 +39,13 @@ defmodule Ravenx do
 
   @doc """
   Dispatch a notification `payload` to a specified `strategy` asynchronously.
+
+  This function should be used when the caller has an interest in the notification dispatch result,
+  which must be received using `Task.await/2`. Keep in mind that this function links the notification
+  dispatch task with the caller process, so if one fails the other will fail also.
+
+  If you simply want to dispatch an asynchronous notification without having any interest in the
+  result, take a look at `dispatch_nolink/3`.
 
   Custom options for this call can be passed in `options` parameter.
 
@@ -67,6 +75,39 @@ defmodule Ravenx do
     else
       task = Task.async(fn -> handler.call(payload, opts) end)
       {:ok, task}
+    end
+  end
+
+  @doc """
+  Dispatch a notification `payload` to a specified `strategy` unlinked.
+
+  This function spawns a separated process for dispatching the notification in an unlinked way,
+  meaning that the caller won't be able to know the notification dispatch result.
+  If you want to dispatch an asynchronous notification and receive its result take a look at
+  `dispatch_async/3`.
+
+  Custom options for this call can be passed in `options` parameter.
+
+  Returns a tuple with `:ok` or `:error` indicating the task launch result.
+  If the result was `:ok`, the PID of the notification dispatch process is also returned.
+
+  ## Examples
+
+      iex> {status, pid} = Ravenx.dispatch_nolink(:slack, %{title: "Hello world!", body: "Science is cool"})
+      {:ok, #PID<0.165.0>}
+
+      iex> Ravenx.dispatch_nolink(:wadus, %{title: "Hello world!", body: "Science is cool"})
+      {:error, {:unknown_strategy, :wadus}}
+  """
+  def dispatch_nolink(strategy, payload, options \\ %{}) do
+    handler = Keyword.get(available_strategies(), strategy)
+
+    opts = get_options(strategy, payload, options)
+
+    if is_nil(handler) do
+      {:error, {:unknown_strategy, strategy}}
+    else
+      Task.start(fn -> handler.call(payload, opts) end)
     end
   end
 
