@@ -1,5 +1,9 @@
 # Ravenx Changelog
 
+## v 1.1.2
+
+* Allow unlinked notifications (thanks to @belaustegui)
+
 ## v 1.1.1
 
 * Fix circular dependencies (thanks to @mkaravaev)
