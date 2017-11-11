@@ -4,6 +4,7 @@ defmodule Ravenx do
 
   It includes and manages dispatching of messages through registered strategies.
   """
+  use Application
 
   @type notif_id :: atom
   @type notif_strategy :: atom
@@ -13,6 +14,10 @@ defmodule Ravenx do
   @type notif_config :: {notif_strategy, notif_payload} |
     {notif_strategy, notif_payload, notif_options}
   @type dispatch_type :: :sync | :async | :nolink
+
+  def start(_type, _args) do
+    Ravenx.Supervisor.start_link()
+  end
 
   @doc """
   Dispatch a notification `payload` to a specified `strategy`.
@@ -73,7 +78,7 @@ defmodule Ravenx do
     if is_nil(handler) do
       {:error, {:unknown_strategy, strategy}}
     else
-      task = Task.async(fn -> handler.call(payload, opts) end)
+      task = Task.Supervisor.async(Ravenx.Supervisor, fn -> handler.call(payload, opts) end)
       {:ok, task}
     end
   end
@@ -107,7 +112,7 @@ defmodule Ravenx do
     if is_nil(handler) do
       {:error, {:unknown_strategy, strategy}}
     else
-      Task.start(fn -> handler.call(payload, opts) end)
+      Task.Supervisor.start_child(Ravenx.Supervisor, fn -> handler.call(payload, opts) end)
     end
   end
 
