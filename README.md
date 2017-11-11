@@ -8,12 +8,25 @@ Notification dispatch library for Elixir applications (WIP).
 
 ## Installation
 
-The package can be installed as simply as adding `ravenx` to your list of dependencies in `mix.exs`:
+1. The package can be installed as simply as adding `ravenx` to your list of dependencies in `mix.exs`:
 
 ```elixir
   def deps do
     [{:ravenx, "~> 1.0.0"}]
   end
+```
+
+2. Add Ravenx to your list of applications in `mix.exs`. This step is only needed if you are using a version older than Elixir 1.4.0 or you already have some applications listed under the `applications` key. In any other case applications are automatically inferred from dependencies (explained in the [Application inference](http://elixir-lang.github.io/blog/2017/01/05/elixir-v1-4-0-released/) section):
+
+```elixir
+def application do
+  [
+    applications: [
+      ...,
+      :ravenx
+    ]
+  ]
+end
 ```
 
 ## Strategies
