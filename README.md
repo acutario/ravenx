@@ -4,7 +4,7 @@
 [![Current Version](https://img.shields.io/hexpm/v/ravenx.svg)](https://hex.pm/packages/ravenx)
 [![Build Status](https://travis-ci.org/acutario/ravenx.svg?branch=master)](https://travis-ci.org/acutario/ravenx)
 
-Notification dispatch library for Elixir applications (WIP).
+Notification dispatch library for Elixir applications.
 
 ## Installation
 
@@ -12,28 +12,44 @@ Notification dispatch library for Elixir applications (WIP).
 
 ```elixir
   def deps do
-    [{:ravenx, "~> 1.0.0"}]
+    [{:ravenx, "~> 2.0.0"}]
   end
-```
-
-2. Add Ravenx to your list of applications in `mix.exs`. This step is only needed if you are using a version older than Elixir 1.4.0 or you already have some applications listed under the `applications` key. In any other case applications are automatically inferred from dependencies (explained in the [Application inference](http://elixir-lang.github.io/blog/2017/01/05/elixir-v1-4-0-released/) section):
-
-```elixir
-def application do
-  [
-    applications: [
-      ...,
-      :ravenx
-    ]
-  ]
-end
 ```
 
 ## Strategies
 
-We currently support Slack and E-mail notifications (but there are more to come!).
+We currently support Slack and E-mail notifications. To enable those strategies you need to install additional dependencies and add them to the list of strategies in your config.
 
-Also, there is the possibility of creating 3rd party integrations that works with Ravenx, as mentioned bellow
+### Slack
+
+```elixir
+{:poison, "~> 2.0 or ~> 3.0"},
+{:httpoison, "~> 0.12"},
+```
+
+```elixir
+config :ravenx,
+  strategies: [
+    # Add the following line
+    slack: Ravenx.Strategy.Slack,
+  ]
+```
+
+### Email
+
+```elixir
+{:bamboo, "~> 0.8"},
+```
+
+```elixir
+config :ravenx,
+  strategies: [
+    # Add the following line
+    email: Ravenx.Strategy.Email,
+  ]
+```
+
+Also, there is the possibility of creating 3rd party integrations that works with Ravenx, as mentioned below:
 
 ### 3rd party strategies
 
@@ -186,3 +202,11 @@ config :ravenx,
 ```
 
 and start using your strategy to deliver notifications using the atom assigned (in the example, `my_strategy`).
+
+## Troubleshooting
+
+### Ravenx not being started (Elixir <1.4)
+
+In Elixir versions <1.4 you need to explicitly list `applications` to be started. This is needed
+for Ravenx as well as any of the dependencies needed for the bundled strategies. For more information
+read the release notes for [Elixir 1.4](http://elixir-lang.github.io/blog/2017/01/05/elixir-v1-4-0-released/).
