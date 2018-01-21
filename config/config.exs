@@ -8,18 +8,23 @@ use Mix.Config
 # if you want to provide default values for your application for
 # 3rd-party users, it should be done in your "mix.exs" file.
 
-# You can configure for your application as:
-#
-#     config :ravenx, key: :value
-#
-# And access this configuration in your application as:
-#
-#     Application.get_env(:ravenx, :key)
-#
-# Or configure a 3rd-party app:
-#
-#     config :logger, level: :info
-#
+config :ravenx,
+  strategies: [
+    # Does need HTTPoison and Poison as dependency
+    #
+    # {:poison, "~> 2.0 or ~> 3.0"},
+    # {:httpoison, "~> 0.12"},
+    #
+    slack: Ravenx.Strategy.Slack,
+
+    # Does need Bamboo and BambooSMTP as dependency
+    #
+    # {:bamboo, "~> 0.8"},
+    # {:bamboo_smtp, "~> 1.4.0"},
+    #
+    email: Ravenx.Strategy.Email,
+    dummy: Ravenx.Strategy.Dummy
+  ]
 
 # It is also possible to import configuration files, relative to this
 # directory. For example, you can emulate configuration per environment

@@ -99,6 +99,8 @@ GitHub.sublime-settings
 !.vscode/tasks.json
 !.vscode/launch.json
 
+### ASDF ###
+.tool-versions
 
 ### Erlang ###
 .eunit

@@ -127,13 +127,11 @@ defmodule Ravenx do
   """
   @spec available_strategies() :: keyword
   def available_strategies do
-    bundled_strategies = [
-      slack: Ravenx.Strategy.Slack,
-      email: Ravenx.Strategy.Email,
+    default_strategies = [
       dummy: Ravenx.Strategy.Dummy
     ]
 
-    bundled_strategies
+    default_strategies
     |> Keyword.merge(Application.get_env(:ravenx, :strategies, []))
   end
 
