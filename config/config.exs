@@ -17,10 +17,9 @@ config :ravenx,
     #
     slack: Ravenx.Strategy.Slack,
 
-    # Does need Bamboo and BambooSMTP as dependency
+    # Does need Bamboo
     #
     # {:bamboo, "~> 0.8"},
-    # {:bamboo_smtp, "~> 1.4.0"},
     #
     email: Ravenx.Strategy.Email,
     dummy: Ravenx.Strategy.Dummy
@@ -31,6 +30,6 @@ config :ravenx,
 # by uncommenting the line below and defining dev.exs, test.exs and such.
 # Configuration from the imported file will override the ones defined
 # here (which is why it is important to import them last).
-if File.exists?("config/#{Mix.env}.exs") do
-  import_config("#{Mix.env}.exs")
+if File.exists?("config/#{Mix.env()}.exs") do
+  import_config("#{Mix.env()}.exs")
 end

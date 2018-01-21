@@ -1,4 +1,4 @@
-if Code.ensure_loaded?(Bamboo) and Code.ensure_loaded?(Bamboo.SMTPAdapter) do
+if Code.ensure_loaded?(Bamboo) do
   defmodule Ravenx.Strategy.Email do
     @moduledoc """
     Ravenx Email strategy.

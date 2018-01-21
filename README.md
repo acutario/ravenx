@@ -39,7 +39,6 @@ config :ravenx,
 
 ```elixir
 {:bamboo, "~> 0.8"},
-{:bamboo_smtp, "~> 1.4.0"},
 ```
 
 ```elixir
