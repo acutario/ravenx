@@ -23,11 +23,13 @@ defmodule Ravenx.Notification do
       That tuple follows standard notification dispatch response.
 
       """
-      @spec dispatch(any) :: [{Ravenx.notif_id, Ravenx.notif_result}]
+      @spec dispatch(any) :: [{Ravenx.notif_id(), Ravenx.notif_result()}]
       def dispatch(opts) do
         opts
         |> get_notifications_config
-        |> Enum.map(fn({k, opts}) -> {k, Ravenx.Notification.dispatch_notification(opts, :sync)} end)
+        |> Enum.map(fn {k, opts} ->
+          {k, Ravenx.Notification.dispatch_notification(opts, :sync)}
+        end)
       end
 
       @doc """
@@ -45,11 +47,13 @@ defmodule Ravenx.Notification do
       That tuple follows standard notification dispatch response.
 
       """
-      @spec dispatch_async(any) :: [{Ravenx.notif_id, Ravenx.notif_result}]
+      @spec dispatch_async(any) :: [{Ravenx.notif_id(), Ravenx.notif_result()}]
       def dispatch_async(opts) do
         opts
         |> get_notifications_config
-        |> Enum.map(fn({k, opts}) -> {k, Ravenx.Notification.dispatch_notification(opts, :async)} end)
+        |> Enum.map(fn {k, opts} ->
+          {k, Ravenx.Notification.dispatch_notification(opts, :async)}
+        end)
       end
 
       @doc """
@@ -66,11 +70,13 @@ defmodule Ravenx.Notification do
       and a tuple indicating final state as value.
       That tuple follows standard notification dispatch response.
       """
-      @spec dispatch_nolink(any) :: [{Ravenx.notif_id, Ravenx.notif_result}]
+      @spec dispatch_nolink(any) :: [{Ravenx.notif_id(), Ravenx.notif_result()}]
       def dispatch_nolink(opts) do
         opts
         |> get_notifications_config
-        |> Enum.map(fn({k, opts}) -> {k, Ravenx.Notification.dispatch_notification(opts, :nolink)} end)
+        |> Enum.map(fn {k, opts} ->
+          {k, Ravenx.Notification.dispatch_notification(opts, :nolink)}
+        end)
       end
     end
   end
@@ -88,16 +94,21 @@ defmodule Ravenx.Notification do
   It will respond with a tuple, with an atom that could be `:ok` or `:error` and
   the result of the operation, as an standard notification dispatch returns.
   """
-  @spec dispatch_notification(Ravenx.notif_config, Ravenx.dispatch_type) :: Ravenx.notif_result
+  @spec dispatch_notification(Ravenx.notif_config(), Ravenx.dispatch_type()) ::
+          Ravenx.notif_result()
   def dispatch_notification(notification, dispatch_type) do
     dispatcher = get_dispatcher(dispatch_type)
+
     case notification do
       {strategy, payload, options} when is_atom(strategy) and is_map(payload) and is_map(options) ->
         dispatcher.(strategy, payload, options)
+
       {strategy, payload} when is_atom(strategy) and is_map(payload) ->
         dispatcher.(strategy, payload, %{})
+
       [_] ->
         {:error, {:missing, :payload}}
+
       _ ->
         {:error, {:invalid, :notification}}
     end

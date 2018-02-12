@@ -24,8 +24,7 @@ defmodule Ravenx.Strategy.Slack do
   """
   @spec call(map, map) :: {:ok, binary} | {:error, {atom, any}}
   def call(payload, options \\ %{}) when is_map(payload) and is_map(options) do
-    url = options
-    |> Map.get(:url)
+    url = Map.get(options, :url)
 
     payload
     |> parse_options(options)
@@ -47,21 +46,27 @@ defmodule Ravenx.Strategy.Slack do
   #
   @spec send_notification(map, binary) :: {:ok, binary} | {:error, {atom, any}}
   defp send_notification(_payload, nil), do: {:error, {:missing_config, :url}}
+
   defp send_notification(payload, url) do
     json_payload = Poison.encode!(payload)
+
     header = [
       {"Accept", "application/json"},
       {"Content-Type", "application/json"}
     ]
 
-    HTTPoison.start
+    HTTPoison.start()
+
     case HTTPoison.post(url, json_payload, header) do
       {:ok, %HTTPoison.Response{body: response, status_code: 200}} ->
         {:ok, response}
+
       {:ok, %HTTPoison.Response{body: response}} ->
         {:error, {:error_response, response}}
+
       {:error, %HTTPoison.Error{reason: reason}} ->
         {:error, {:error, reason}}
+
       _ = e ->
         {:error, {:unknown_response, e}}
     end
@@ -71,6 +76,7 @@ defmodule Ravenx.Strategy.Slack do
   #
   @spec add_to_payload(map, atom, any) :: map
   defp add_to_payload(payload, _key, nil), do: payload
+
   defp add_to_payload(payload, key, value) do
     payload
     |> Map.put(key, value)

@@ -6,11 +6,11 @@ defmodule Ravenx.Mixfile do
       app: :ravenx,
       version: "1.1.2",
       elixir: "~> 1.3",
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       docs: docs(),
       dialyzer: [plt_add_deps: :transitive]
@@ -64,12 +64,13 @@ defmodule Ravenx.Mixfile do
   end
 
   defp package do
-    [# These are the default files included in the package
-     name: :ravenx,
-     files: ["lib", "mix.exs", "README*", "LICENSE*"],
-     maintainers: ["Óscar de Arriba"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/acutario/ravenx"}
+    # These are the default files included in the package
+    [
+      name: :ravenx,
+      files: ["lib", "mix.exs", "README*", "LICENSE*"],
+      maintainers: ["Óscar de Arriba"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/acutario/ravenx"}
     ]
   end
 

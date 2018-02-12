@@ -31,29 +31,30 @@ defmodule Ravenx.Strategy.Email do
   an `:error`.
 
   """
-  @spec call(map, %{adapter: atom}) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
+  @spec call(map, %{adapter: atom}) :: {:ok, Bamboo.Email.t()} | {:error, {atom, any}}
   def call(payload, %{adapter: _a} = opts) do
     %Bamboo.Email{}
     |> parse_options(opts)
     |> parse_payload(payload)
     |> send_email(opts)
   end
+
   def call(_payload, _opts), do: {:error, {:missing_config, :adapter}}
 
   # It returns a list of available adapters.
   #
   @spec available_adapters() :: keyword
   def available_adapters do
-    default_adapters =
-      [
-        mailgun: Bamboo.MailgunAdapter,
-        mandrill: Bamboo.MandrillAdapter,
-        sendgrid: Bamboo.SendgridAdapter,
-        smtp: Bamboo.SMTPAdapter,
-        local: Bamboo.LocalAdapter,
-        test: Bamboo.TestAdapter
-      ]
-    Keyword.merge(default_adapters, Application.get_env(:ravenx, :bamboo_adapters) ||  [])
+    default_adapters = [
+      mailgun: Bamboo.MailgunAdapter,
+      mandrill: Bamboo.MandrillAdapter,
+      sendgrid: Bamboo.SendgridAdapter,
+      smtp: Bamboo.SMTPAdapter,
+      local: Bamboo.LocalAdapter,
+      test: Bamboo.TestAdapter
+    ]
+
+    Keyword.merge(default_adapters, Application.get_env(:ravenx, :bamboo_adapters) || [])
   end
 
   # Tries to get an adapter form list of available adapters
@@ -63,6 +64,7 @@ defmodule Ravenx.Strategy.Email do
     case Keyword.get(available_adapters(), adapter, nil) do
       nil ->
         {:error, nil}
+
       adapter ->
         {:ok, adapter}
     end
@@ -70,28 +72,29 @@ defmodule Ravenx.Strategy.Email do
 
   # Priate function to handle email sending and verify that required fields are
   # passed
-  @spec send_email(Bamboo.Email.t, map) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
+  @spec send_email(Bamboo.Email.t(), map) :: {:ok, Bamboo.Email.t()} | {:error, {atom, any}}
 
   defp send_email(%Bamboo.Email{to: nil}, _opts), do: {:error, {:missing_config, :to}}
   defp send_email(%Bamboo.Email{from: nil}, _opts), do: {:error, {:missing_config, :from}}
 
   defp send_email(%Bamboo.Email{} = email, opts) do
-    adapter = opts
-    |> Map.get(:adapter)
-    |> available_adapter()
+    adapter =
+      opts
+      |> Map.get(:adapter)
+      |> available_adapter()
 
     case adapter do
       {:ok, adapter} ->
         try do
           # We must tell the adapter to fulfill the options
-          complete_opts = opts
-          |> adapter.handle_config()
+          complete_opts = adapter.handle_config(opts)
 
           response = Mailer.deliver_now(adapter, email, complete_opts)
           {:ok, response}
         rescue
           e -> {:error, {:exception, e}}
         end
+
       {:error, _} ->
         {:error, {:adapter_not_found, adapter}}
     end
@@ -102,7 +105,7 @@ defmodule Ravenx.Strategy.Email do
   # Private function to get information from payload and apply to the Bamboo
   # email object.
   #
-  @spec parse_payload(Bamboo.Email.t, map()) :: Bamboo.Email.t
+  @spec parse_payload(Bamboo.Email.t(), map()) :: Bamboo.Email.t()
   defp parse_payload(email, payload) do
     email
     |> add_to_email(:subject, Map.get(payload, :subject))
@@ -128,8 +131,9 @@ defmodule Ravenx.Strategy.Email do
 
   # Private function to add information to the email object.
   #
-  @spec add_to_email(Bamboo.Email.t, atom, any) :: Bamboo.Email.t
+  @spec add_to_email(Bamboo.Email.t(), atom, any) :: Bamboo.Email.t()
   defp add_to_email(email, _key, nil), do: email
+
   defp add_to_email(email, key, value) do
     email
     |> Map.put(key, value)
