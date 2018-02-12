@@ -17,7 +17,7 @@ defmodule Ravenx do
   @type dispatch_type :: :sync | :async | :nolink
 
   def start(_type, _args) do
-    Ravenx.Supervisor.start_link()
+    Task.Supervisor.start_link(name: Ravenx.Supervisor, max_restarts: 2)
   end
 
   @doc """
