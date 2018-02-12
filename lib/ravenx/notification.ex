@@ -11,6 +11,8 @@ defmodule Ravenx.Notification do
       # Notification implementations should implement required callbacks.
       @behaviour Ravenx.NotificationBehaviour
 
+      alias Ravenx.Notification
+
       @doc """
       Function dispatch the notification synchronously.
 
@@ -28,7 +30,7 @@ defmodule Ravenx.Notification do
         opts
         |> get_notifications_config
         |> Enum.map(fn {k, opts} ->
-          {k, Ravenx.Notification.dispatch_notification(opts, :sync)}
+          {k, Notification.dispatch_notification(opts, :sync)}
         end)
       end
 
@@ -52,7 +54,7 @@ defmodule Ravenx.Notification do
         opts
         |> get_notifications_config
         |> Enum.map(fn {k, opts} ->
-          {k, Ravenx.Notification.dispatch_notification(opts, :async)}
+          {k, Notification.dispatch_notification(opts, :async)}
         end)
       end
 
@@ -75,7 +77,7 @@ defmodule Ravenx.Notification do
         opts
         |> get_notifications_config
         |> Enum.map(fn {k, opts} ->
-          {k, Ravenx.Notification.dispatch_notification(opts, :nolink)}
+          {k, Notification.dispatch_notification(opts, :nolink)}
         end)
       end
     end
