@@ -12,7 +12,7 @@ Notification dispatch library for Elixir applications (WIP).
 
 ```elixir
   def deps do
-    [{:ravenx, "~> 1.0.0"}]
+    [{:ravenx, "~> 1.1.3"}]
   end
 ```
 
