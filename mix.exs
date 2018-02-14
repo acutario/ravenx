@@ -4,13 +4,13 @@ defmodule Ravenx.Mixfile do
   def project do
     [
       app: :ravenx,
-      version: "1.1.2",
+      version: "1.1.3",
       elixir: "~> 1.3",
-      build_embedded: Mix.env == :prod,
-      start_permanent: Mix.env == :prod,
+      build_embedded: Mix.env() == :prod,
+      start_permanent: Mix.env() == :prod,
       description: description(),
       package: package(),
-      elixirc_paths: elixirc_paths(Mix.env),
+      elixirc_paths: elixirc_paths(Mix.env()),
       deps: deps(),
       docs: docs(),
       dialyzer: [plt_add_deps: :transitive]
@@ -23,12 +23,6 @@ defmodule Ravenx.Mixfile do
   def application do
     [
       mod: {Ravenx, []},
-      applications: [
-        :logger,
-        :bamboo,
-        :bamboo_smtp,
-        :poison
-      ],
       included_applications: [
         :httpoison
       ]
@@ -47,12 +41,12 @@ defmodule Ravenx.Mixfile do
   defp deps do
     [
       {:poison, "~> 2.0 or ~> 3.0"},
-      {:httpoison, "~> 0.12"},
+      {:httpoison, "~> 1.0"},
       {:bamboo, "~> 0.8"},
       {:bamboo_smtp, "~> 1.4.0"},
       {:ex_doc, ">= 0.0.0", only: :dev},
       {:dialyxir, "~> 0.4", only: :dev},
-      {:credo, "~> 0.8", only: [:dev, :test]}
+      {:credo, ">= 0.8.0", only: [:dev, :test]}
     ]
   end
 
@@ -70,12 +64,13 @@ defmodule Ravenx.Mixfile do
   end
 
   defp package do
-    [# These are the default files included in the package
-     name: :ravenx,
-     files: ["lib", "mix.exs", "README*", "LICENSE*"],
-     maintainers: ["Óscar de Arriba"],
-     licenses: ["MIT"],
-     links: %{"GitHub" => "https://github.com/acutario/ravenx"}
+    # These are the default files included in the package
+    [
+      name: :ravenx,
+      files: ["lib", "mix.exs", "README*", "LICENSE*"],
+      maintainers: ["Óscar de Arriba"],
+      licenses: ["MIT"],
+      links: %{"GitHub" => "https://github.com/acutario/ravenx"}
     ]
   end
 

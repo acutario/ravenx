@@ -14,10 +14,10 @@ defmodule RavenxNotificationTest do
     result = Ravenx.Test.TestNotification.dispatch(true)
 
     dummy_result = Keyword.get(result, :dummy)
-    assert dummy_result == DummyStrategy.get_ok_result
+    assert dummy_result == DummyStrategy.get_ok_result()
 
     dummy_not_result = Keyword.get(result, :dummy_not)
-    assert dummy_not_result == DummyStrategy.get_error_result
+    assert dummy_not_result == DummyStrategy.get_error_result()
   end
 
   test "dispatch multiple notifications asynchronously returns expected keys" do
@@ -41,10 +41,10 @@ defmodule RavenxNotificationTest do
     result = Ravenx.Test.TestNotification.dispatch_async(true)
 
     {:ok, task} = Keyword.get(result, :dummy)
-    assert Task.await(task) == DummyStrategy.get_ok_result
+    assert Task.await(task) == DummyStrategy.get_ok_result()
 
     {:ok, task} = Keyword.get(result, :dummy_not)
-    assert Task.await(task) == DummyStrategy.get_error_result
+    assert Task.await(task) == DummyStrategy.get_error_result()
   end
 
   test "dispatch multiple notifications unlinked returns expected keys" do

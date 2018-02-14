@@ -1,5 +1,4 @@
 defmodule Ravenx.Test.TestConfig do
-
   def test_multiple(_) do
     %{
       token2: "MySecondSecretToken"

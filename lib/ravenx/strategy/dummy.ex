@@ -14,7 +14,7 @@ defmodule Ravenx.Strategy.Dummy do
   true. Otherwise, return false.
 
   """
-  @spec call(map, map) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
+  @spec call(map, map) :: {:ok, Bamboo.Email.t()} | {:error, {atom, any}}
   def call(%{result: true}, _), do: get_ok_result()
   def call(_, _), do: get_error_result()
 

@@ -11,12 +11,13 @@ defmodule Ravenx do
   @type notif_payload :: map
   @type notif_options :: map
   @type notif_result :: {:ok, any} | {:error, {atom, any}}
-  @type notif_config :: {notif_strategy, notif_payload} |
-    {notif_strategy, notif_payload, notif_options}
+  @type notif_config ::
+          {notif_strategy, notif_payload}
+          | {notif_strategy, notif_payload, notif_options}
   @type dispatch_type :: :sync | :async | :nolink
 
   def start(_type, _args) do
-    Ravenx.Supervisor.start_link()
+    Task.Supervisor.start_link(name: Ravenx.Supervisor, max_restarts: 2)
   end
 
   @doc """
@@ -159,6 +160,7 @@ defmodule Ravenx do
   #
   @spec call_config_module(atom, notif_strategy, notif_payload) :: notif_options
   defp call_config_module(module, _strategy, _payload) when is_nil(module), do: %{}
+
   defp call_config_module(module, strategy, payload) do
     if Keyword.has_key?(module.__info__(:functions), strategy) do
       apply(module, strategy, [payload])
@@ -166,5 +168,4 @@ defmodule Ravenx do
       %{}
     end
   end
-
 end

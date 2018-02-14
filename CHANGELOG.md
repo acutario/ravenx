@@ -1,5 +1,12 @@
 # Ravenx Changelog
 
+## v 1.1.3
+
+* Format base code using Elixir 1.6 formatter
+* Update dependencies
+* Simpler supervision tree
+* Correct synchronous notifications (thanks to @ponty96)
+
 ## v 1.1.2
 
 * Allow unlinked notifications (thanks to @belaustegui)

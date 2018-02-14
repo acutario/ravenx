@@ -14,6 +14,6 @@ defmodule Ravenx.Test.TestStrategy do
   true. Otherwise, return false.
 
   """
-  @spec call(map, map) :: {:ok, Bamboo.Email.t} | {:error, {atom, any}}
+  @spec call(map, map) :: {:ok, Bamboo.Email.t()} | {:error, {atom, any}}
   def call(_, opts), do: {:ok, opts}
 end
