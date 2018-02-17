@@ -22,10 +22,7 @@ defmodule Ravenx.Mixfile do
   # Type "mix help compile.app" for more information
   def application do
     [
-      mod: {Ravenx, []},
-      included_applications: [
-        :httpoison
-      ]
+      mod: {Ravenx, []}
     ]
   end
 
