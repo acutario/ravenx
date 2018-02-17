@@ -1,5 +1,9 @@
 # Ravenx Changelog
 
+## v 2.0.0
+
+* Strategies come in separate packages
+
 ## v 1.1.3
 
 * Format base code using Elixir 1.6 formatter

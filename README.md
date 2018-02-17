@@ -31,18 +31,53 @@ end
 
 ## Strategies
 
-We currently support Slack and E-mail notifications (but there are more to come!).
+From version 2.0, strategies come in separate packages, so the dependencies
+needed are not added by default.
 
-Also, there is the possibility of creating 3rd party integrations that works with Ravenx, as mentioned bellow
+To define strategies, just add their packages to your `mix.exs` file and add
+them to Ravenx configuration as follows:
+
+```elixir
+config :ravenx,
+  strategies: [
+    email: Ravenx.Strategy.Email
+    slack: Ravenx.Strategy.Slack
+    my_strategy: MyApp.Ravenx.MyStrategy
+  ]
+```
+
+We currently maintain two strategies:
+
+* **Slack**: [hex.pm](https://hex.pm/packages/ravenx_slack) | [GitHub](https://github.com/acutario/ravenx_slack)
+* **E-mail** (based on Bamboo): [hex.pm](https://hex.pm/packages/ravenx_email) | [GitHub](https://github.com/acutario/ravenx_email)
+
+Also, 3rd party strategies are supported and listed below.
 
 ### 3rd party strategies
 
-Some amazing people created 3rd party strategies to use Ravenx with more services:
+Amazing people created 3rd party strategies to use Ravenx with more services:
 
 * **Pusher** (thanks to [@behind-design](https://github.com/behind-design)): [hex.pm](https://hex.pm/packages/ravenx_pusher) | [GitHub](https://github.com/behind-design/ravenx-pusher)
 * **Telegram** (thanks to [@maratgaliev](https://github.com/maratgaliev)): [hex.pm](https://hex.pm/packages/ravenx_telegram) | [GitHub](https://github.com/maratgaliev/ravenx_telegram)
 
 Anyone can create a strategy that works with Ravenx, so if you have one, please let us know to add it to this list.
+
+### Custom strategies
+
+Maybe there is some internal service you need to call to send notifications, so there is a way to create custom strategies for yout projects.
+
+First of all, you need to create a module that meet the [required behaviour](https://github.com/acutario/ravenx/blob/master/lib/ravenx/strategy_behaviour.ex), like the example you can see [here](https://github.com/acutario/ravenx/blob/master/lib/ravenx/strategy/dummy.ex).
+
+Then you can define custom strategies in application configuration:
+
+```elixir
+config :ravenx,
+  strategies: [
+    my_strategy: YourApp.MyStrategy
+  ]
+```
+
+and start using your strategy to deliver notifications using the atom assigned (in the example, `my_strategy`).
 
 ## Single notification
 
@@ -170,19 +205,10 @@ Configuration can also be mixed by using the three methods:
  * Dynamic configuration common to more than one scenario using a configuration module.
  * Call-specific configuration sending a config Keyword list on `dispatch` method.
 
-## Custom strategies
+## Contribute
 
-Maybe there is some internal service you need to call to send notifications, so there is a way to create custom strategies for yout projects.
+All contributions are welcome, and we really hope this repo will serve for beginners as well for more advanced developers.
 
-First of all, you need to create a module that meet the [required behaviour](https://github.com/acutario/ravenx/blob/master/lib/ravenx/strategy_behaviour.ex), like the example you can see [here](https://github.com/acutario/ravenx/blob/master/lib/ravenx/strategy/dummy.ex).
+If you have any doubt, feel free to ask, but always respecting our [Code of Conduct](https://github.com/acutario/ravenx_slack/blob/master/CODE_OF_CONDUCT.md).
 
-Then you can define custom strategies in application configuration:
-
-```elixir
-config :ravenx,
-  strategies: [
-    my_strategy: YourApp.MyStrategy
-  ]
-```
-
-and start using your strategy to deliver notifications using the atom assigned (in the example, `my_strategy`).
+To contribute, create a fork of the repository, make your changes and create a PR. And remember, talking on PRs/issues is a must!
