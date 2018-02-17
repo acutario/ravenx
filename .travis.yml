@@ -3,11 +3,23 @@ elixir:
   - 1.5.0
   - 1.6.0
 otp_release:
-  - 19.0
-  - 19.1
   - 19.2
   - 20.2
+
+matrix:
+  include:
+    - elixir: 1.4
+      otp_release: 19.2
 env:
   - MIX_ENV=test
+
+cache:
+  directories:
+    - deps
+    - _build
+
 script:
+  - mix compile --warning-as-errors
+  - if [ "$TRAVIS_ELIXIR_VERSION" == "1.6.0" ]; then mix format --check-formatted; fi
+  - mix credo
   - mix test
