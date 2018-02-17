@@ -4,8 +4,8 @@ defmodule Ravenx.Mixfile do
   def project do
     [
       app: :ravenx,
-      version: "1.1.3",
-      elixir: "~> 1.3",
+      version: "2.0.0",
+      elixir: "~> 1.4",
       build_embedded: Mix.env() == :prod,
       start_permanent: Mix.env() == :prod,
       description: description(),
@@ -45,6 +45,7 @@ defmodule Ravenx.Mixfile do
 
   defp docs do
     [
+      main: "readme",
       source_url: "https://github.com/acutario/ravenx",
       extras: ["README.md"]
     ]
